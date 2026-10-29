@@ -30,7 +30,6 @@ theme:
     text: Inter
     code: JetBrains Mono
   features:
-    - navigation.instant
     - navigation.tracking
     - navigation.tabs
     - navigation.sections
@@ -48,6 +47,78 @@ theme:
 plugins:
   - search
   - tags
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: zh
+          name: 中文
+          build: true
+          site_name: 分布式训练的代数
+          site_description: 大规模机器学习的数学基础
+          nav_translations:
+            Home: 首页
+            "Part I: Foundations": "第一部分：基础"
+            "Part II: Scaling Laws": "第二部分：扩展定律"
+            "Part III: The Algebra of Collectives": "第三部分：集合通信代数"
+            "Part IV: Parallelism from Properties": "第四部分：从性质推导并行"
+            "Part V: Memory as a Dimension": "第五部分：内存维度"
+            "Part VI: Composition and Resilience": "第六部分：组合与容错"
+            "Part VII: Efficiency Frontiers": "第七部分：效率前沿"
+            "Part VIII: Synthesis": "第八部分：综合"
+            Appendices: 附录
+            Preface: 前言
+            "The Scale Imperative": 规模的必然性
+            "The Extended Roofline": 扩展屋顶线模型
+            "The Memory Hierarchy of a Cluster": 集群的内存层次结构
+            "Data Pipeline I/O": 数据流水线与 I/O
+            "The α-β Model": α-β 模型
+            "The Economics of Compute": 算力经济学
+            "Estimation as Discipline": 估算即纪律
+            "The Compute-Loss Surface": 计算-损失曲面
+            "Chinchilla Optimality": Chinchilla 最优性
+            "Phase Transitions in Scaling": 扩展中的相变
+            "Batch Size and Learning Dynamics": 批大小与学习动力学
+            "Collective Primitives and Properties": 集合通信原语与性质
+            "Ring and Tree Algorithms": 环形与树形算法
+            "The Collective Cost Model": 集合通信成本模型
+            "Topology-Aware Collectives": 拓扑感知的集合通信
+            "Data Parallelism from Associativity": 从结合律推导数据并行
+            "Tensor Parallelism from Linearity": 从线性性推导张量并行
+            "Pipeline Parallelism from Separability": 从可分离性推导流水线并行
+            "Sequence Parallelism from Decomposability": 从可分解性推导序列并行
+            "Expert Parallelism from Sparsity": 从稀疏性推导专家并行
+            "The Memory Equation": 内存方程
+            "ZeRO: Zero Redundancy Optimizer": "ZeRO：零冗余优化器"
+            "Activation Recomputation": 激活重计算
+            "Offloading: Extending Memory Beyond the GPU": "卸载：突破 GPU 内存限制"
+            "The Device Mesh Abstraction": 设备网格抽象
+            "3D Parallelism": 三维并行
+            "4D and 5D Parallelism": 四维与五维并行
+            "Failures and Checkpointing": 故障与检查点
+            "Configuration Search": 配置搜索
+            "Gradient Compression": 梯度压缩
+            "Asynchrony and Local SGD": 异步与本地 SGD
+            "Reduced Precision Training": 降精度训练
+            "Overlapping Communication with Computation": 通信与计算重叠
+            "Architecture-Aware Efficiency": 架构感知的效率
+            "Profiling Distributed Training": 分布式训练性能剖析
+            "Investigation Protocol": 排查协议
+            "Case Study: LLaMA 3": "案例研究：LLaMA 3"
+            "Case Study: DeepSeek-V3": "案例研究：DeepSeek-V3"
+            "Case Study: Mistral and Mixtral": "案例研究：Mistral 与 Mixtral"
+            "Conclusion: The Algebra of Scale": "结语：规模的代数"
+            Glossary: 术语表
+            "Notation and Minimal Formalism": 符号与最小形式化
+            "Hardware Assumptions and Units": 硬件假设与单位
+            "Quick Reference": 快速参考
+            References: 参考文献
 
 markdown_extensions:
   - abbr
@@ -106,64 +177,64 @@ nav:
   - Home: index.md
 
   - "Part I: Foundations":
-    - foundations/01-scale-imperative.md
-    - foundations/02-extended-roofline.md
-    - foundations/03-cluster-memory-hierarchy.md
-    - foundations/03a-data-pipeline-io.md
-    - foundations/04-alpha-beta-model.md
-    - foundations/05-economics-of-compute.md
-    - foundations/06-estimation-discipline.md
+    - "The Scale Imperative": foundations/01-scale-imperative.md
+    - "The Extended Roofline": foundations/02-extended-roofline.md
+    - "The Memory Hierarchy of a Cluster": foundations/03-cluster-memory-hierarchy.md
+    - "Data Pipeline I/O": foundations/03a-data-pipeline-io.md
+    - "The α-β Model": foundations/04-alpha-beta-model.md
+    - "The Economics of Compute": foundations/05-economics-of-compute.md
+    - "Estimation as Discipline": foundations/06-estimation-discipline.md
 
   - "Part II: Scaling Laws":
-    - scaling-laws/07-compute-loss-surface.md
-    - scaling-laws/08-chinchilla-optimality.md
-    - scaling-laws/09-phase-transitions.md
-    - scaling-laws/10-batch-size-dynamics.md
+    - "The Compute-Loss Surface": scaling-laws/07-compute-loss-surface.md
+    - "Chinchilla Optimality": scaling-laws/08-chinchilla-optimality.md
+    - "Phase Transitions in Scaling": scaling-laws/09-phase-transitions.md
+    - "Batch Size and Learning Dynamics": scaling-laws/10-batch-size-dynamics.md
 
   - "Part III: The Algebra of Collectives":
-    - collectives/11-primitives-properties.md
-    - collectives/12-ring-tree-algorithms.md
-    - collectives/13-collective-cost-model.md
-    - collectives/13a-topology-aware-collectives.md
+    - "Collective Primitives and Properties": collectives/11-primitives-properties.md
+    - "Ring and Tree Algorithms": collectives/12-ring-tree-algorithms.md
+    - "The Collective Cost Model": collectives/13-collective-cost-model.md
+    - "Topology-Aware Collectives": collectives/13a-topology-aware-collectives.md
 
   - "Part IV: Parallelism from Properties":
-    - parallelism/14-data-parallelism-associativity.md
-    - parallelism/15-tensor-parallelism-linearity.md
-    - parallelism/16-pipeline-parallelism-separability.md
-    - parallelism/17-sequence-parallelism-decomposability.md
-    - parallelism/18-expert-parallelism-sparsity.md
+    - "Data Parallelism from Associativity": parallelism/14-data-parallelism-associativity.md
+    - "Tensor Parallelism from Linearity": parallelism/15-tensor-parallelism-linearity.md
+    - "Pipeline Parallelism from Separability": parallelism/16-pipeline-parallelism-separability.md
+    - "Sequence Parallelism from Decomposability": parallelism/17-sequence-parallelism-decomposability.md
+    - "Expert Parallelism from Sparsity": parallelism/18-expert-parallelism-sparsity.md
 
   - "Part V: Memory as a Dimension":
-    - memory/19-memory-equation.md
-    - memory/20-zero-sharding.md
-    - memory/21-activation-recomputation.md
-    - memory/22-offloading.md
+    - "The Memory Equation": memory/19-memory-equation.md
+    - "ZeRO: Zero Redundancy Optimizer": memory/20-zero-sharding.md
+    - "Activation Recomputation": memory/21-activation-recomputation.md
+    - "Offloading: Extending Memory Beyond the GPU": memory/22-offloading.md
 
   - "Part VI: Composition and Resilience":
-    - composition/23-device-mesh.md
-    - composition/24-3d-parallelism.md
-    - composition/25-4d-5d-parallelism.md
-    - composition/26-failures-checkpoints.md
-    - composition/27-configuration-search.md
+    - "The Device Mesh Abstraction": composition/23-device-mesh.md
+    - "3D Parallelism": composition/24-3d-parallelism.md
+    - "4D and 5D Parallelism": composition/25-4d-5d-parallelism.md
+    - "Failures and Checkpointing": composition/26-failures-checkpoints.md
+    - "Configuration Search": composition/27-configuration-search.md
 
   - "Part VII: Efficiency Frontiers":
-    - efficiency/28-gradient-compression.md
-    - efficiency/29-asynchrony-local-sgd.md
-    - efficiency/30-reduced-precision.md
-    - efficiency/31-overlapping-communication.md
-    - efficiency/31a-architectural-efficiency.md
+    - "Gradient Compression": efficiency/28-gradient-compression.md
+    - "Asynchrony and Local SGD": efficiency/29-asynchrony-local-sgd.md
+    - "Reduced Precision Training": efficiency/30-reduced-precision.md
+    - "Overlapping Communication with Computation": efficiency/31-overlapping-communication.md
+    - "Architecture-Aware Efficiency": efficiency/31a-architectural-efficiency.md
 
   - "Part VIII: Synthesis":
-    - synthesis/32-profiling-distributed.md
-    - synthesis/33-investigation-protocol.md
-    - synthesis/34-case-study-llama3.md
-    - synthesis/35-case-study-deepseek.md
-    - synthesis/36-case-study-mistral.md
-    - synthesis/37-conclusion.md
+    - "Profiling Distributed Training": synthesis/32-profiling-distributed.md
+    - "Investigation Protocol": synthesis/33-investigation-protocol.md
+    - "Case Study: LLaMA 3": synthesis/34-case-study-llama3.md
+    - "Case Study: DeepSeek-V3": synthesis/35-case-study-deepseek.md
+    - "Case Study: Mistral and Mixtral": synthesis/36-case-study-mistral.md
+    - "Conclusion: The Algebra of Scale": synthesis/37-conclusion.md
 
   - Appendices:
-    - appendices/glossary.md
-    - appendices/notation.md
-    - appendices/hardware-assumptions.md
-    - appendices/quick-reference.md
-    - appendices/references.md
+    - "Glossary": appendices/glossary.md
+    - "Notation and Minimal Formalism": appendices/notation.md
+    - "Hardware Assumptions and Units": appendices/hardware-assumptions.md
+    - "Quick Reference": appendices/quick-reference.md
+    - "References": appendices/references.md
