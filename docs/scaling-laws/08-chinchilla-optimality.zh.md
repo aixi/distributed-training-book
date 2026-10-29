@@ -438,7 +438,7 @@ $$L(\Psi, D, r) = L(\Psi, D_{\text{unique}}) + \gamma \cdot \log(r)$$
 
     $$L_{\text{MoE}} \propto \frac{1}{(\Psi_{\text{active}})^\alpha \cdot (\Psi_{\text{total}}/\Psi_{\text{active}})^{\alpha/2}}$$
 
-    用于损失缩放的有效参数量：
+    用于损失缩放（loss scaling）的有效参数量：
 
     $$\Psi_{\text{eff}} = \Psi_{\text{active}} \cdot \left(\frac{\Psi_{\text{total}}}{\Psi_{\text{active}}}\right)^{0.5} = 70\text{B} \cdot \left(\frac{1000\text{B}}{70\text{B}}\right)^{0.5}$$
 

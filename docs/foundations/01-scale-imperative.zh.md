@@ -8,7 +8,7 @@ subtitle: "为什么分布式训练不再是可选项"
 </div>
 
 <div class="investigation-question" markdown>
-**问题**：一个模型有 700 亿参数。每个参数占 2 字节（FP16）。仅权重就需要 140GB——这还没算梯度、优化器状态或激活值。一块 H100 只有 80GB 内存。我们究竟该如何训练这个模型？
+**问题**：一个模型有 700 亿参数。每个参数占 2 字节（FP16）。仅权重就需要 140GB——这还没算梯度、优化器状态（optimizer states）或激活值。一块 H100 只有 80GB 内存。我们究竟该如何训练这个模型？
 </div>
 
 <div class="notation-banner" markdown>
@@ -70,7 +70,7 @@ GPU 小时很昂贵，低效就是浪费。如果由于并行化不佳，我们�
 
 | 策略 | 数学性质 | 关键运算 |
 |------|----------|----------|
-| 数据并行（Data Parallelism） | 结合律（Associativity） | 梯度累积 |
+| 数据并行（Data Parallelism） | 结合律（Associativity） | 梯度累积（Gradient Accumulation） |
 | 张量并行（Tensor Parallelism） | 线性性（Linearity） | 矩阵乘法 |
 | 流水线并行（Pipeline Parallelism） | 可分离性（Separability） | 层组合 |
 | 序列并行（Sequence Parallelism） | 可分解性（Decomposability） | 注意力计算 |
@@ -85,7 +85,7 @@ GPU 小时很昂贵，低效就是浪费。如果由于并行化不佳，我们�
 | **数据并行（Data Parallelism）** | 在 GPU 间复制模型；每块 GPU 处理不同数据；梯度取平均 | 第 14 章 |
 | **张量并行（Tensor Parallelism）** | 把单个矩阵运算拆分到多块 GPU；需要高速互连 | 第 15 章 |
 | **流水线并行（Pipeline Parallelism）** | 把层划分到多块 GPU；数据依次流过各阶段 | 第 16 章 |
-| **AllReduce** | 一种集合通信操作：对所有 GPU 上的值求和，并把结果分发回每一块 GPU | 第 11 章 |
+| **AllReduce** | 一种集合通信（collective communication）操作：对所有 GPU 上的值求和，并把结果分发回每一块 GPU | 第 11 章 |
 | **ZeRO** | 在数据并行副本之间分片优化器状态、梯度或参数的内存优化技术 | 第 20 章 |
 | **激活检查点（Activation Checkpointing）** | 丢弃中间激活值，在反向传播时重算，用计算换内存 | 第 21 章 |
 | **MFU**（模型 FLOP 利用率） | 实际达到的 FLOP/s 占理论峰值的比例；关键效率指标 | 第 13 章 |
@@ -171,7 +171,7 @@ GPU 小时很昂贵，低效就是浪费。如果由于并行化不佳，我们�
 
     在 35% MFU 下，65% 的理论计算能力未被使用。
 
-    然而，“浪费”取决于可实现的上限。由于通信、内存带宽限制、流水线气泡等根本性开销，当前最先进的分布式训练通常能达到 40–50% MFU。
+    然而，“浪费”取决于可实现的上限。由于通信、内存带宽限制、流水线气泡（pipeline bubble）等根本性开销，当前最先进的分布式训练通常能达到 40–50% MFU。
 
     **假设 50% MFU 是可以达到的：**
 

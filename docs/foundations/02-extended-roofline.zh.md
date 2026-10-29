@@ -99,11 +99,11 @@ $$I_{ridge}^{net} = \frac{989 \times 10^{12} \text{ FLOP/s}}{50 \times 10^9 \tex
 当 $I_{\text{net}}$ 低时：
 
 - 受限于网络带宽或延迟
-- 技术手段：梯度压缩、重叠、低精度通信
+- 技术手段：梯度压缩（Gradient Compression）、重叠、低精度通信
 - 例子：梯度同步、参数服务器
 
 !!! note "实践"
-    如果 NCCL/通信占步时超过 30%，就估算 $I_{\text{net}}$ 并与屋脊点比较。对 H100 + 400 Gbps InfiniBand，$I_{\text{ridge}} \approx 20k$ FLOPs/byte。低于此值时，应增大批大小/累积步数，或把低强度的集合通信迁移到更快的链路上。
+    如果 NCCL/通信占步时超过 30%，就估算 $I_{\text{net}}$ 并与屋脊点比较。对 H100 + 400 Gbps InfiniBand，$I_{\text{ridge}} \approx 20k$ FLOPs/byte。低于此值时，应增大批大小/累积步数，或把低强度的集合通信（collective communication）迁移到更快的链路上。
 
 ## 计算通信强度
 
@@ -127,7 +127,7 @@ $$I_{\text{net}}^{\text{DP}} = \frac{6\Psi B S / P}{2\Psi s} = \frac{3BS}{Ps}$$
 
 $$I_{\text{net}}^{\text{TP}} = O(H)$$
 
-隐层维越大 → 强度越高 → 张量并行越高效。
+隐层维越大 → 强度越高 → 张量并行（Tensor Parallelism）越高效。
 
 ### 流水线并行
 
@@ -157,13 +157,13 @@ $$I_{\text{ridge}} = \frac{989 \times 10^{12}}{50 \times 10^9} = 19,780 \text{ F
 1. **最大化通信强度**：增大批大小，使用梯度累积
 2. **让通信与计算重叠**：用有用的工作隐藏延迟
 3. **压缩通信**：减少传输字节数
-4. **明智地选择拓扑**：张量并行放在节点内（高带宽），流水线并行跨节点（容忍延迟）
+4. **明智地选择拓扑**：张量并行放在节点内（高带宽），流水线并行（Pipeline Parallelism）跨节点（容忍延迟）
 
 扩展屋顶线是我们分析分布式训练瓶颈的首要工具。
 
 ## 练习题
 
-1. 用数据并行在 64 块 GPU 上训练一个 70 亿参数模型，批大小为 100 万 token，计算其通信强度。
+1. 用数据并行（Data Parallelism）在 64 块 GPU 上训练一个 70 亿参数模型，批大小为 100 万 token，计算其通信强度。
 
 ??? success "解答"
     **已知：**
@@ -215,7 +215,7 @@ $$I_{\text{ridge}} = \frac{989 \times 10^{12}}{50 \times 10^9} = 19,780 \text{ F
 
     1. **网络受限**：通信未与计算重叠
     2. **内存受限**：低算术强度的运算（注意力、LayerNorm）
-    3. **流水线气泡**：阶段边界的空闲时间
+    3. **流水线气泡（pipeline bubble）**：阶段边界的空闲时间
     4. **负载不均衡**：部分 GPU 先完成
     5. **kernel 低效**：次优的 GPU kernel
 

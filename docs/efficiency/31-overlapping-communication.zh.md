@@ -855,7 +855,7 @@ def batched_collectives():
 
 ## 流水线并行中的重叠
 
-流水线并行天然制造重叠机会。
+流水线并行（Pipeline Parallelism）天然制造重叠机会。
 
 ### 交错的 1F1B 调度
 
@@ -1469,7 +1469,7 @@ prof.export_chrome_trace("overlap_trace.json")
 
     隐藏的通信时间：$T_m - 60 = 120 - 60 = 60\text{ms}$
 
-    **屋顶线视角：**
+    **屋顶线（roofline）视角：**
 
     ```
     Time:  0        80       140      200ms
@@ -1488,7 +1488,7 @@ prof.export_chrome_trace("overlap_trace.json")
     | **梯度压缩** | 把 $T_m$ 减少 10-100× | 显著 |
     | **更大的桶** | 更好的带宽利用 | 轻微 |
     | **每步更多计算** | 更大的批 → 更多 $T_c$ 来隐藏 $T_m$ | 中等 |
-    | **张量并行** | 减少每 GPU 的通信量 | 中等 |
+    | **张量并行（Tensor Parallelism）** | 减少每 GPU 的通信量 | 中等 |
     | **更快的互连** | NVLink vs PCIe | 显著 |
     | **流水线并行** | 把通信分散到各阶段 | 中等 |
 

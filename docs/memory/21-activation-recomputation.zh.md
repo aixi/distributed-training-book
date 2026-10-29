@@ -14,7 +14,7 @@ subtitle: "通过梯度检查点用计算换内存"
 !!! abstract "本章导览"
     **前置知识**：[第 19 章](19-memory-equation.md)（内存方程分解）
 
-    **核心洞见**：大batch size下激活主导内存。只在层边界做检查点、在反向时重算中间值，用约 33% 的额外计算换取大幅内存节省——从而支持更大的批和更长的序列。
+    **核心洞见**：大batch size下激活主导内存。只在层边界做检查点（checkpoint）、在反向时重算中间值，用约 33% 的额外计算换取大幅内存节省——从而支持更大的批和更长的序列。
 
 ## 激活内存问题
 
@@ -529,7 +529,7 @@ class CompressedCheckpoint(torch.autograd.Function):
 
 ### 卸载式检查点
 
-将检查点与 CPU 卸载结合。
+将检查点与 CPU 卸载（offloading）结合。
 
 ```python
 class OffloadedCheckpoint(torch.autograd.Function):
@@ -616,7 +616,7 @@ class ZeROWithCheckpointing:
 - 模型状态：$16\Psi/P$（ZeRO-3）
 - 激活：$O(\sqrt{L})$（检查点）
 
-### 检查点 + 张量并行
+### 检查点 + 张量并行（Tensor Parallelism）
 
 使用 TP 时要小心检查点，避免冗余通信：
 
@@ -645,7 +645,7 @@ class TPCheckpointedLayer(nn.Module):
         return self.output(F.gelu(intermediate))
 ```
 
-### 检查点 + 流水线并行
+### 检查点 + 流水线并行（Pipeline Parallelism）
 
 流水线阶段在阶段边界自然形成检查点：
 
@@ -1110,7 +1110,7 @@ model.gradient_checkpointing_enable()
 
     1. **随机舍入**：减少量化偏差
     2. **逐张量缩放**：最大化动态范围利用
-    3. **混合精度检查点**：大张量用 FP8，小张量用 FP16
+    3. **混合精度（mixed precision）检查点**：大张量用 FP8，小张量用 FP16
     4. **梯度缩放**：补偿降低的精度
 
     ```python
@@ -1200,7 +1200,7 @@ model.gradient_checkpointing_enable()
 
     **关键洞见：** ZeRO-3 与检查点组合带来乘性收益——两者单独都不足以在 64 块 GPU 上训练 70B。
 
-6. **流水线交互**：在 8 个微批的 4 阶段流水线中，峰值时存了多少份激活拷贝？检查点如何影响这一点？
+6. **流水线交互**：在 8 个微批（micro-batch）的 4 阶段流水线中，峰值时存了多少份激活拷贝？检查点如何影响这一点？
 
 ??? success "解答"
     **流水线配置：**

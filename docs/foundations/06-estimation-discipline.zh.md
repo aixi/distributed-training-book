@@ -65,7 +65,7 @@ $$M_{\text{act}}^{\text{layer}} \approx BSH \cdot (34 + 5\frac{AS}{H})$$
 
 $$M_{\text{act}} = L \cdot M_{\text{act}}^{\text{layer}}$$
 
-使用激活检查点（每 $k$ 层重算）时，峰值内存由两部分组成：(1) $L/k$ 个边界上的检查点存储（只存隐状态输入，各约 $2BSH$ 字节），以及 (2) 重算期间最多 $k$ 层的完整逐层激活：
+使用激活检查点（每 $k$ 层重算）时，峰值内存由两部分组成：(1) $L/k$ 个边界上的检查点（checkpoint）存储（只存隐状态输入，各约 $2BSH$ 字节），以及 (2) 重算期间最多 $k$ 层的完整逐层激活：
 
 $$M_{\text{act}}^{\text{ckpt}} \approx \frac{L}{k} \cdot 2BSH + k \cdot M_{\text{act}}^{\text{layer}}$$
 
@@ -130,7 +130,7 @@ $$T_{\text{train}} = \frac{2 \times 10^{12}}{136,000} \approx 14.7 \times 10^6 \
 
 ## 通信估算
 
-### 数据并行
+### 数据并行（Data Parallelism）
 
 每步 AllReduce 通信量：$2\Psi$ 字节
 
@@ -142,7 +142,7 @@ $$T_{\text{AR}} = \frac{2(P-1)}{P} \cdot \frac{2\Psi}{\beta}$$
 
 $$T_{\text{AR}} = 2 \times \frac{127}{128} \times \frac{140 \times 10^9}{50 \times 10^9} \approx 5.6 \text{ seconds}$$
 
-### 张量并行
+### 张量并行（Tensor Parallelism）
 
 每层 AllReduce：$2 \times B \times S \times H$ 字节
 
@@ -152,9 +152,9 @@ $$T_{\text{TP}}^{\text{layer}} = \frac{2 \times 4 \times 4096 \times 8192}{900 \
 
 每步合计（80 层，每层 2 次 AllReduce）：约 48ms
 
-### 流水线并行
+### 流水线并行（Pipeline Parallelism）
 
-气泡比例：
+气泡（pipeline bubble）比例：
 
 $$\text{Bubble} = \frac{p - 1}{m + p - 1}$$
 
@@ -174,7 +174,7 @@ p=8、m=32 时：Bubble = 7/39 ≈ 18%
 
 | 错误 | 后果 | 修正 |
 |------|------|------|
-| 忘记优化器状态 | 内存低估 3 倍 | 始终计入 12Ψ |
+| 忘记优化器状态（optimizer states） | 内存低估 3 倍 | 始终计入 12Ψ |
 | 忽略激活值 | 训练中 OOM | 计入 $B \cdot S \cdot H$ |
 | 假设 100% MFU | 时间低估 2 倍 | 用 40–50% MFU |
 | 忽略通信 | 理论可行、实践失败 | 加上 AllReduce/AllGather 时间 |

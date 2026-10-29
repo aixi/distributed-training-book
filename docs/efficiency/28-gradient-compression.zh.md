@@ -4,7 +4,7 @@ subtitle: "用保真度换取带宽"
 ---
 
 <div class="chapter-opener" markdown>
-通信成本主导大规模训练。梯度压缩提供了一个看似神奇的解法：传输更少的数据，却收敛到同样的结果。它为何有效——以及何时失效——的数学，揭示了优化理论与信息论之间的深层联系。
+通信成本主导大规模训练。梯度压缩（Gradient Compression）提供了一个看似神奇的解法：传输更少的数据，却收敛到同样的结果。它为何有效——以及何时失效——的数学，揭示了优化理论与信息论之间的深层联系。
 </div>
 
 <div class="investigation-question" markdown>
@@ -16,7 +16,7 @@ subtitle: "用保真度换取带宽"
 </div>
 
 !!! abstract "承上：第三至第六部分"
-    我们在[第三部分](../collectives/11-primitives-properties.md)确定了**AllReduce 成本**随模型规模增长，并在大规模训练中占主导。[第四部分](../parallelism/14-data-parallelism-associativity.md)展示了**数据并行**如何要求每步都做梯度同步。[第六部分](../composition/23-device-mesh.md)讲授了组合。现在我们要问：能否减少通信量本身？本部分探讨把效率推到基本并行之上的技术。
+    我们在[第三部分](../collectives/11-primitives-properties.md)确定了**AllReduce 成本**随模型规模增长，并在大规模训练中占主导。[第四部分](../parallelism/14-data-parallelism-associativity.md)展示了**数据并行（Data Parallelism）**如何要求每步都做梯度同步。[第六部分](../composition/23-device-mesh.md)讲授了组合。现在我们要问：能否减少通信量本身？本部分探讨把效率推到基本并行之上的技术。
 
 ## 通信瓶颈
 

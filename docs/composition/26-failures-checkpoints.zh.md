@@ -4,7 +4,7 @@ subtitle: "把容错看作数学不变量"
 ---
 
 <div class="chapter-opener" markdown>
-在大规模下，故障不是例外——而是常态。在一次刻意悲观的压测中（10,000 块 GPU、每块 GPU 的 MTBF 为 4 小时），你每 1.4 秒就会损失一块 GPU。在本章的基准模型中（GPU MTBF 20,000 小时，加上主机故障），系统仍大约每 96 分钟就经历一次故障。检查点的数学决定了训练是能完成，还是会崩溃。
+在大规模下，故障不是例外——而是常态。在一次刻意悲观的压测中（10,000 块 GPU、每块 GPU 的 MTBF 为 4 小时），你每 1.4 秒就会损失一块 GPU。在本章的基准模型中（GPU MTBF 20,000 小时，加上主机故障），系统仍大约每 96 分钟就经历一次故障。检查点（checkpoint）的数学决定了训练是能完成，还是会崩溃。
 </div>
 
 <div class="investigation-question" markdown>
@@ -69,7 +69,7 @@ $$\mathbb{E}[\text{completion time}] = \frac{e^{450} - 1}{0.625} \approx \infty$
 对于分布式训练，这要求：
 
 1. **模型状态一致性**：所有参数分片代表同一个逻辑步
-2. **优化器状态一致性**：动量、速度与参数对齐
+2. **优化器状态（optimizer states）一致性**：动量、速度与参数对齐
 3. **数据加载器状态**：从 epoch 中的正确位置恢复
 4. **RNG 状态**：随机数生成器可复现
 
@@ -592,7 +592,7 @@ class CoordinatedCheckpointer:
 
 ### 处理流水线并行
 
-在流水线并行下，不同阶段可能在处理不同的微批：
+在流水线并行（Pipeline Parallelism）下，不同阶段可能在处理不同的微批（micro-batch）：
 
 ```
                   Micro-batch timeline
@@ -600,7 +600,7 @@ Stage 0:    [MB0][MB1][MB2][MB3]     ← Ahead
 Stage 1:        [MB0][MB1][MB2][MB3] ← Behind
 ```
 
-**解决方案**：在流水线气泡处（所有阶段同步时）做检查点：
+**解决方案**：在流水线气泡（pipeline bubble）处（所有阶段同步时）做检查点：
 
 ```python
 class PipelineCheckpointer:
@@ -1646,7 +1646,7 @@ class FaultTolerantTrainer:
     | 全局批 | 2048 | 1536 |
     | 学习率 | 0.001 | 0.00075 |
 
-    **方案 2：用梯度累积保持全局批**
+    **方案 2：用梯度累积（Gradient Accumulation）保持全局批**
 
     通过累积梯度保持 B=2048：
 

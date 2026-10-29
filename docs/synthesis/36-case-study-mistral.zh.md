@@ -719,7 +719,7 @@ class DistributedMoE(nn.Module):
 
 ### 每 GPU 内存
 
-对带专家并行的 Mixtral 8x7B 训练：
+对带专家并行（Expert Parallelism）的 Mixtral 8x7B 训练：
 
 ```python
 class MixtralMemoryAnalyzer:
@@ -833,9 +833,9 @@ Mixtral 采用混合方法：
 
 | 维度 | 策略 | 理由 |
 |------|------|------|
-| 张量并行 | TP=1 或 2 | 注意力很小，TP 开销不值得 |
+| 张量并行（Tensor Parallelism） | TP=1 或 2 | 注意力很小，TP 开销不值得 |
 | 专家并行 | EP=8 | 每 GPU 一个专家，无复制 |
-| 数据并行 | FSDP | 在副本间分片非专家参数 |
+| 数据并行（Data Parallelism） | FSDP | 在副本间分片非专家参数 |
 | 序列 | 不使用 | 窗口注意力限制了序列成本 |
 
 ### 通信模式
@@ -1095,7 +1095,7 @@ $$\text{Speed ratio} \approx \frac{\text{Active params}}{\text{Mistral params}} 
 
     $$\boxed{\text{GQA with 8 groups: 4× memory reduction with <1\% quality loss}}$$
 
-3. **MoE 计算效率**：对一个 16 专家、top-2 路由的模型，有多大比例的专家 FLOPs 被激活？按 Chinchilla 扩展律，这如何改变最优训练数据预算？
+3. **MoE 计算效率**：对一个 16 专家、top-2 路由的模型，有多大比例的专家 FLOPs 被激活？按 Chinchilla 扩展律（scaling law），这如何改变最优训练数据预算？
 
 ??? success "解答"
     **练习 3：MoE 计算效率**

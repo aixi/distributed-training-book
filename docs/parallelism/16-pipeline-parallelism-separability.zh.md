@@ -8,7 +8,7 @@ subtitle: "分解顺序计算"
 </div>
 
 <div class="investigation-question" markdown>
-**问题**：如果把一个 32 层的模型拆成 4 个阶段、每个阶段 8 层，有多少时间浪费在"流水线气泡"上？能把气泡降到零吗？
+**问题**：如果把一个 32 层的模型拆成 4 个阶段、每个阶段 8 层，有多少时间浪费在"流水线气泡"上？能把气泡（pipeline bubble）降到零吗？
 </div>
 
 !!! abstract "本章导览"
@@ -692,7 +692,7 @@ $$\text{Volume} = 2 \cdot (P-1) \cdot m \cdot b \cdot S \cdot H \cdot \text{size
 
 ### 与数据并行的对比
 
-数据并行的 AllReduce 通信量：
+数据并行（Data Parallelism）的 AllReduce 通信量：
 
 $$\text{Volume}_{\text{DP}} = 2 \cdot \frac{P-1}{P} \cdot \Psi \cdot \text{sizeof}$$
 
@@ -1112,7 +1112,7 @@ $$M_{\text{stage}} = M_{\text{params}} + P \cdot M_{\text{act}} + M_{\text{grad}
 
 - $M_{\text{params}}$：本阶段参数（$\approx \Psi/P$）
 - $M_{\text{act}}$：每微批次激活
-- $M_{\text{grad}}$：梯度累积缓冲区
+- $M_{\text{grad}}$：梯度累积（Gradient Accumulation）缓冲区
 
 ## 常见陷阱
 
@@ -1484,7 +1484,7 @@ loss.backward()
 7. **实现**：实现一个支持梯度检查点（gradient checkpointing）以减少激活内存的流水线阶段。它与 1F1B 调度如何相互作用？
 
 ??? success "解答"
-    **梯度检查点与流水线并行：**
+    **梯度检查点（checkpoint）与流水线并行：**
 
     梯度检查点通过在反向传播时重算激活（而非保存它们）来减少激活内存。
 

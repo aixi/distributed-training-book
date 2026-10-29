@@ -4,7 +4,7 @@ subtitle: "预测任意操作的通信时间"
 ---
 
 <div class="chapter-opener" markdown>
-借助 α-β 分析和算法知识，我们可以在运行之前就预测任意集合通信操作的成本。这种预测能力对容量规划（capacity planning）至关重要。
+借助 α-β 分析和算法知识，我们可以在运行之前就预测任意集合通信（collective communication）操作的成本。这种预测能力对容量规划（capacity planning）至关重要。
 </div>
 
 <div class="investigation-question" markdown>
@@ -362,7 +362,7 @@ $$T_{\text{TP}} = 4 \times T_{\text{AllReduce}}(n_{\text{activation}})$$
 
 （每层前向 2 次 AllReduce、反向 2 次）
 
-### 流水线并行 Send/Recv
+### 流水线并行（Pipeline Parallelism） Send/Recv
 
 每个微批次：
 
@@ -415,9 +415,9 @@ $$T_{\text{total}} = T_{\text{compute}} + T_{\text{comm}}$$
 
 ### 缩小消息大小
 
-- **梯度压缩**：将 $n$ 缩小 10-100 倍
-- **混合精度**：FP16 相比 FP32 把 $n$ 减半
-- **梯度累积**：减少 AllReduce 调用次数
+- **梯度压缩（Gradient Compression）**：将 $n$ 缩小 10-100 倍
+- **混合精度（mixed precision）**：FP16 相比 FP32 把 $n$ 减半
+- **梯度累积（Gradient Accumulation）**：减少 AllReduce 调用次数
 
 ### 提升有效带宽
 
@@ -606,7 +606,7 @@ $$T \approx P \cdot \alpha \gg \frac{n}{\beta}$$
     - 网络 β = 50 GB/s（节点间，用于 DP）
     - α_NV = 1 μs，α_net = 5 μs
 
-    **第 1 部分：张量并行通信**
+    **第 1 部分：张量并行（Tensor Parallelism）通信**
 
     TP 需要在每个 TP 组内对激活值做 AllReduce。
 
@@ -628,7 +628,7 @@ $$T \approx P \cdot \alpha \gg \frac{n}{\beta}$$
 
     $$T_{\text{TP}} = 40 \times 4 \times 14.9 = \boxed{2,384 \text{ ms}}$$
 
-    **第 2 部分：数据并行通信**
+    **第 2 部分：数据并行（Data Parallelism）通信**
 
     DP 需要在各 DP 组之间对梯度做 AllReduce。
 
@@ -661,8 +661,8 @@ $$T \approx P \cdot \alpha \gg \frac{n}{\beta}$$
 
     **可考虑的优化：**
 
-    1. **序列并行**：减小每块 GPU 上的激活大小
-    2. **激活检查点**：用计算换内存（不直接改善通信）
+    1. **序列并行（Sequence Parallelism）**：减小每块 GPU 上的激活大小
+    2. **激活检查点（checkpoint）**：用计算换内存（不直接改善通信）
     3. **降低 TP 度**：TP=4 而非 TP=8 可以让 TP 通信减半，但会增加每 GPU 显存
     4. **将 TP AllReduce 与计算重叠**：使用异步集合通信
 

@@ -65,7 +65,7 @@ $$\text{Training time} = \frac{C}{\text{Effective FLOPs}} = \frac{3.79 \times 10
 
 - 有效 MFU 更接近约 50%（或有效计算预算更低）
 - 故障与重启损失了时间
-- 验证与检查点带来开销
+- 验证与检查点（checkpoint）带来开销
 
 ## 内存分析
 
@@ -158,7 +158,7 @@ $$\approx 126 \times (268M + 436M) \times 2 \approx 177 \text{ GB per sequence}$
 
 ## 并行配置
 
-### 张量并行：8 路
+### 张量并行（Tensor Parallelism）：8 路
 
 LLaMA 3 使用 TP=8，与每个节点上通过 NVLink 连接的 8 块 GPU 相匹配。
 
@@ -194,13 +194,13 @@ $$M_{\text{stage}} = 8 \times 6\text{ GB} = 48 \text{ GB}$$
 
 这留下约 32 GB 给激活值、优化器状态（已切分）与工作内存。
 
-**流水线气泡分析**（第 16 章）：
+**流水线气泡（pipeline bubble）分析**（第 16 章）：
 
 对微批数为 $m$ 的 1F1B 调度：
 
 $$\text{Bubble fraction} = \frac{p-1}{m+p-1}$$
 
-取 $p=16$、$m=64$ 个微批：
+取 $p=16$、$m=64$ 个微批（micro-batch）：
 
 $$\text{Bubble} = \frac{15}{79} \approx 19\%$$
 
@@ -208,14 +208,14 @@ $$\text{Bubble} = \frac{15}{79} \approx 19\%$$
 
 ### 数据并行：FSDP（ZeRO-3）
 
-剩下的维度是切分式数据并行：
+剩下的维度是切分式数据并行（Data Parallelism）：
 
 $$DP = \frac{16384}{8 \times 16} = 128$$
 
 **FSDP 切分**：
 
 - 模型参数：810 GB / 128 = 每 rank 6.3 GB
-- 优化器状态：3,240 GB / 128 = 每 rank 25.3 GB
+- 优化器状态（optimizer states）：3,240 GB / 128 = 每 rank 25.3 GB
 - 梯度：810 GB / 128 = 每 rank 6.3 GB
 
 **切分状态合计**：每 rank 约 38 GB
@@ -323,7 +323,7 @@ LLaMA 3 从较小的批大小起步并逐步提升：
 | 0–8T token | 4M |
 | 8T–15T token | 8M–16M |
 
-**为什么？** 由第 10 章，临界批大小在训练中会增大：
+**为什么？** 由第 10 章，临界批大小（critical batch size）在训练中会增大：
 
 $$B_{\text{crit}} \propto \frac{\text{tr}(\Sigma)}{\text{tr}(H)}$$
 
@@ -345,13 +345,13 @@ LLaMA 3 使用：
 
 ### 数值稳定性
 
-**混合精度策略**：
+**混合精度（mixed precision）策略**：
 
 - 权重：BF16
 - 激活值：BF16
 - 梯度：BF16
 - 优化器状态：FP32
-- 损失缩放：动态
+- 损失缩放（loss scaling）：动态
 
 **为什么用 BF16 而非 FP16？** 更大的指数范围（8 位对 5 位）可防止以下情形中的溢出：
 
@@ -701,7 +701,7 @@ if __name__ == "__main__":
 ??? success "解答"
     **练习 1：并行权衡（PP=8 vs PP=16 vs PP=32）**
 
-    **流水线并行下每 GPU 的内存：**
+    **流水线并行（Pipeline Parallelism）下每 GPU 的内存：**
 
     对 126 层的 LLaMA 3 405B：
 
@@ -818,7 +818,7 @@ if __name__ == "__main__":
 
     每层的计算远超通信，所以极少的重叠就足够。
 
-4. **上下文并行**：对 128K 上下文、CP=8，计算每层额外的 KV 缓存通信。与标准注意力内存缩放作比较。
+4. **上下文并行（Context Parallelism）**：对 128K 上下文、CP=8，计算每层额外的 KV 缓存通信。与标准注意力内存缩放作比较。
 
 ??? success "解答"
     **练习 4：上下文并行**

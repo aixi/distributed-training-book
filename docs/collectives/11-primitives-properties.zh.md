@@ -4,7 +4,7 @@ subtitle: "分布式通信的构建块"
 ---
 
 <div class="chapter-opener" markdown>
-每一个分布式训练算法都由一小组集合通信操作构建而成。理解它们的代数性质，能揭示为什么某些组合可行，而另一些会失败。
+每一个分布式训练算法都由一小组集合通信（collective communication）操作构建而成。理解它们的代数性质，能揭示为什么某些组合可行，而另一些会失败。
 </div>
 
 <div class="investigation-question" markdown>
@@ -68,7 +68,7 @@ P2: [3 6 9 12]       P2: [10 20 30 40]
 P3: [4 8 12 16]      P3: [10 20 30 40]
 ```
 
-**使用场景**：数据并行中的梯度同步。
+**使用场景**：数据并行（Data Parallelism）中的梯度同步。
 
 **通信量**：每个进程 $2(P-1)/P \cdot n$ 字节（环形算法）。
 
@@ -119,7 +119,7 @@ P3: [D]              P3: [A B C D]
 **使用场景**：在 ZeRO-3 中重建完整张量。
 
 !!! info "什么是 ZeRO？"
-    **ZeRO（Zero Redundancy Optimizer，零冗余优化器）** 是第 20 章介绍的一种内存优化技术。它在数据并行 GPU 之间分片优化器状态、梯度和/或参数，而不是复制它们。ZeRO-3 对三者都做分片，需要 AllGather 在前向/反向传播时重建参数，并用 ReduceScatter 分发归约后的梯度。
+    **ZeRO（Zero Redundancy Optimizer，零冗余优化器）** 是第 20 章介绍的一种内存优化技术。它在数据并行 GPU 之间分片优化器状态（optimizer states）、梯度和/或参数，而不是复制它们。ZeRO-3 对三者都做分片，需要 AllGather 在前向/反向传播时重建参数，并用 ReduceScatter 分发归约后的梯度。
 
 **通信量**：每个进程接收 $(P-1) \cdot n/P$ 字节。
 

@@ -71,7 +71,7 @@ $$n^* = 2 \times 10^{-6} \times 50 \times 10^{9} = 100 \times 10^{3} \text{ B} =
 
 ## 集合通信操作
 
-对集合通信，我们要给模型加上额外的项。
+对集合通信（collective communication），我们要给模型加上额外的项。
 
 !!! note "预览：集合通信一览"
     我们将在第三部分深入讨论集合通信。现在先建立直觉：
@@ -230,7 +230,7 @@ All-to-All 之后，GPU $j$ 持有第 $j$ 列：即每块 GPU 上处于位置 $j
 **用例：**
 
 - **专家并行**（Mixtral、Switch Transformer 等 MoE 模型）：把 token 路由到分布在 GPU 上相应专家，再用 All-to-All 送回结果
-- **序列并行 ↔ 张量并行转换**：在切换并行策略时变换数据布局
+- **序列并行（Sequence Parallelism） ↔ 张量并行（Tensor Parallelism）转换**：在切换并行策略时变换数据布局
 - **FFT 及其他重转置算法**：为下一个计算阶段重新分配数据
 
 ## 对算法设计的启示
@@ -385,7 +385,7 @@ def measure_bandwidth(size_bytes, dtype=torch.bfloat16, warmup=10, trials=100):
 
     **分解：** 逐个 AllReduce 光延迟开销就花了 $252 \text{ ms}$（1000 × 252 μs），而分桶版本只付 252 μs。分桶节省了 $(k-1)\alpha = 999 \times 252 \text{ μs} \approx 252 \text{ ms}$ 的延迟。
 
-3. 推导 NVLink（α=1μs，β=900GB/s）的交叉点。它与 InfiniBand 相比如何？这对张量并行与数据并行的最优消息大小意味着什么？
+3. 推导 NVLink（α=1μs，β=900GB/s）的交叉点。它与 InfiniBand 相比如何？这对张量并行与数据并行（Data Parallelism）的最优消息大小意味着什么？
 
 ??? success "解答"
     **交叉点公式：**

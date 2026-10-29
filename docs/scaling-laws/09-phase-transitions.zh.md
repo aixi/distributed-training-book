@@ -271,7 +271,7 @@ $$\Psi_c \approx \left(\frac{A}{L_c - L_\infty}\right)^{1/\alpha}$$
 
 在相变附近：
 
-- 更频繁地保存检查点
+- 更频繁地保存检查点（checkpoint）
 - 能力可能在两次评估之间出现
 - 不要在相变前一刻停下
 

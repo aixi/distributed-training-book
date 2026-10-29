@@ -88,8 +88,8 @@ $$\text{KV cache (SWA + GQA)} = 2 \times g \times d_h \times w \times s$$
 
 ### 对分布式训练的影响
 
-- **序列并行**：SWA 让 Ring Attention 更便宜——每个分块只需从邻居获取 $w$ 个 token 的上下文，而非完整的前序序列
-- **流水线并行**：阶段边界上的激活张量更小
+- **序列并行（Sequence Parallelism）**：SWA 让 Ring Attention 更便宜——每个分块只需从邻居获取 $w$ 个 token 的上下文，而非完整的前序序列
+- **流水线并行（Pipeline Parallelism）**：阶段边界上的激活张量更小
 - **内存**：可以用释放的内存增大批大小，提升 MFU
 
 Mistral 7B 证明 SWA + GQA 可以匹敌两倍大的模型——完整分析见[第 36 章](../synthesis/36-case-study-mistral.md)。
@@ -138,11 +138,11 @@ DeepSeek-V3 对 MLA 的完整运用见[第 35 章](../synthesis/35-case-study-de
 
 ### 重访气泡问题
 
-标准 1F1B 流水线并行的气泡比例为 $(p-1)/(m+p-1)$。$p=16$、$m=32$ 时：气泡 = 32%。零气泡调度（ZB-H1）能解决，但会增加内存压力。
+标准 1F1B 流水线并行的气泡（pipeline bubble）比例为 $(p-1)/(m+p-1)$。$p=16$、$m=32$ 时：气泡 = 32%。零气泡调度（ZB-H1）能解决，但会增加内存压力。
 
 ### DualPipe：两条流水线，一次通过
 
-DualPipe（DeepSeek-V3）把微批分成两股流，以相反方向流过流水线：
+DualPipe（DeepSeek-V3）把微批（micro-batch）分成两股流，以相反方向流过流水线：
 
 ```
 Stream A: Stage 0 → Stage 1 → ... → Stage P-1   (forward direction)

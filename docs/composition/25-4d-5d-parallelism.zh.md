@@ -4,7 +4,7 @@ subtitle: "上下文并行与专家并行的混入"
 ---
 
 <div class="chapter-opener" markdown>
-当上下文窗口增长到数百万 token、稀疏混合专家模型达到数万亿参数时，三维并行会撞上新的墙。第四维——上下文并行——处理长序列。第五维——专家并行——处理稀疏容量。两者合在一起，才让现存的那些最大模型成为可能。
+当上下文窗口增长到数百万 token、稀疏混合专家模型达到数万亿参数时，三维并行会撞上新的墙。第四维——上下文并行（Context Parallelism）——处理长序列。第五维——专家并行（Expert Parallelism）——处理稀疏容量。两者合在一起，才让现存的那些最大模型成为可能。
 </div>
 
 <div class="investigation-question" markdown>
@@ -795,7 +795,7 @@ class FiveDMesh:
 
 $$M_{\text{params}} = \frac{N_{\text{dense}}}{T \times P} + \frac{N_{\text{expert}}}{T \times P \times E}$$
 
-**优化器状态**：
+**优化器状态（optimizer states）**：
 
 $$M_{\text{optimizer}} = 4 \times M_{\text{params}}$$
 
@@ -803,7 +803,7 @@ $$M_{\text{optimizer}} = 4 \times M_{\text{params}}$$
 
 $$M_{\text{activations}} = \frac{B \times S \times H}{T \times C} \times L_{\text{stage}} \times k_{\text{buffer}}$$
 
-**示例**：1T MoE（200B 稠密 + 800B 专家）、128K 上下文、16K GPU、微批 $B_\mu=16$、$k_{\text{buffer}}=4$
+**示例**：1T MoE（200B 稠密 + 800B 专家）、128K 上下文、16K GPU、微批（micro-batch） $B_\mu=16$、$k_{\text{buffer}}=4$
 
 配置：DP=8、PP=16、TP=8、CP=4、EP=4（全局批 $B = B_\mu \times \text{DP} = 128$）
 
@@ -1000,7 +1000,7 @@ def choose_5d_config(
 
 | 维度 | 值 | 理由 |
 |-----------|-------|-----------|
-| DP | 16 | 数据并行 |
+| DP | 16 | 数据并行（Data Parallelism） |
 | PP | 32 | 深层模型 |
 | TP | 8 | 节点内 |
 | CP | 2 | 128K 上下文 |
@@ -1377,7 +1377,7 @@ def choose_5d_config(
     | 策略 | 影响 |
     |----------|--------|
     | 层次化 AllReduce | 降低延迟 2–3× |
-    | 梯度压缩 | 降低带宽 4–10× |
+    | 梯度压缩（Gradient Compression） | 降低带宽 4–10× |
     | 本地 SGD（K 步） | 降低 AllReduce 频率 |
     | 改为增加 PP 或 CP | 比 DP 更好的扩展性 |
 

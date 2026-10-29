@@ -65,7 +65,7 @@ $$\text{Effective Bandwidth} = \min(\text{Transfer Rate}, \text{Compute Time} / 
 
 ## CPU 卸载
 
-CPU 卸载把优化器状态和梯度移到 CPU 内存中。
+CPU 卸载把优化器状态（optimizer states）和梯度移到 CPU 内存中。
 
 ### 卸载什么
 
@@ -1063,7 +1063,7 @@ $$\eta_{offload} = \frac{T_{compute}}{T_{step}} = \frac{T_{compute}}{\max(T_{com
 | ZeRO-2 | 优化器 + 梯度到 CPU | 只留参数在 GPU 上 |
 | ZeRO-3 | 全部到 CPU/NVMe | GPU 内存占用最小 |
 
-### 卸载 + 张量并行
+### 卸载 + 张量并行（Tensor Parallelism）
 
 TP 降低单 GPU 内存；卸载进一步降低：
 
@@ -1073,7 +1073,7 @@ $$\text{Memory per GPU} = \frac{\text{Total}}{TP \times \text{ZeRO Stage Factor}
 
 $$= \frac{350 \text{ GB}}{8 \times 8} + \text{Activations} = 5.5 \text{ GB} + \text{Activations}$$
 
-### 卸载 + 流水线并行
+### 卸载 + 流水线并行（Pipeline Parallelism）
 
 PP 天然地把内存按时序分阶段。与卸载结合：
 

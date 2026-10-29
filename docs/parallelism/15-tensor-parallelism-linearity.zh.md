@@ -942,7 +942,7 @@ $$\frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y} W^T = \sum_i \fr
 
     - 对这套配置，TP=8 过于激进
     - 可考虑 TP=4（$R$ 翻倍到约 0.34……实际上这里原文如此）或 TP=2（$R$ 约 0.68）
-    - 或者使用序列并行来重叠通信
+    - 或者使用序列并行（Sequence Parallelism）来重叠通信
 
 4. **LayerNorm 的并行**：推导从分片张量上的部分统计量计算全局均值和方差的公式。需要多大的 AllReduce 通信量？
 
@@ -1263,7 +1263,7 @@ $$\frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y} W^T = \sum_i \fr
 | 张量并行度（T） | 拆分大型矩阵乘法 | 更多激活 AllReduce/AllGather |
 | 节点内放置 | 更低延迟、更高带宽 | 限制拓扑与扩展 |
 | 分片布局（行/列） | 改变通信阶段 | 需要匹配层序 |
-| 融合（如 QKV） | 更少的集合通信 | 更复杂的内核与调度 |
+| 融合（如 QKV） | 更少的集合通信（collective communication） | 更复杂的内核与调度 |
 
 ## 关键要点
 

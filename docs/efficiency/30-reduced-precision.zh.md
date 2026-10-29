@@ -4,7 +4,7 @@ subtitle: "计算的比特级经济学"
 ---
 
 <div class="chapter-opener" markdown>
-每一个比特都消耗带宽。每一个尾数位都消耗算力。混合精度训练利用的是硬件高效计算的东西与训练实际需要的东西之间的差距。
+每一个比特都消耗带宽。每一个尾数位都消耗算力。混合精度（mixed precision）训练利用的是硬件高效计算的东西与训练实际需要的东西之间的差距。
 </div>
 
 <div class="investigation-question" markdown>
@@ -370,7 +370,7 @@ def fp32_to_bf16(x: np.ndarray) -> np.ndarray:
 
 ### BF16 简化训练
 
-使用 BF16 时，损失缩放往往不再必要：
+使用 BF16 时，损失缩放（loss scaling）往往不再必要：
 
 ```python
 # FP16: needs loss scaling

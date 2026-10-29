@@ -8,7 +8,7 @@ subtitle: "从寄存器到数据中心"
 </div>
 
 <div class="investigation-question" markdown>
-**问题**：为什么张量并行在节点内行得通，跨节点就吃力？为什么跨节点通信更偏好流水线并行？答案藏在 NVLink 与 InfiniBand 之间 20 倍的带宽差异里。
+**问题**：为什么张量并行（Tensor Parallelism）在节点内行得通，跨节点就吃力？为什么跨节点通信更偏好流水线并行（Pipeline Parallelism）？答案藏在 NVLink 与 InfiniBand 之间 20 倍的带宽差异里。
 </div>
 
 ## 扩展后的层次结构
@@ -111,7 +111,7 @@ $$T(n) = \alpha + \frac{n}{\beta}$$
 
 ### 流水线并行
 
-只在阶段边界通信激活值。是点对点而非集合通信，能容忍更高的延迟。
+只在阶段边界通信激活值。是点对点而非集合通信（collective communication），能容忍更高的延迟。
 
 - 激活大小：$B \cdot S \cdot H$（通常几十 MB）
 - 对 InfiniBand 而言已接近交叉点：延迟影响较小
@@ -123,7 +123,7 @@ $$T(n) = \alpha + \frac{n}{\beta}$$
 
 每步通信一次梯度。通信量是 O(parameters)，而非 O(activations × layers)。
 
-- 可用梯度累积提高通信强度
+- 可用梯度累积（Gradient Accumulation）提高通信强度
 - 压缩技术能降低带宽需求
 - AllReduce 可以与反向传播重叠
 
@@ -238,7 +238,7 @@ Across Nodes:
     - 点对点：1 跳延迟（每次激活传输约 1–5 μs）
     - AllReduce：至少 7 跳，所有阶段同步
 
-    对典型的 $M$，流水线气泡会从 $\frac{P-1}{M+P-1}$ 增至大得多的比例，可能吞没有效工作。
+    对典型的 $M$，流水线气泡（pipeline bubble）会从 $\frac{P-1}{M+P-1}$ 增至大得多的比例，可能吞没有效工作。
 
     **关键洞察：** PP 利用了神经网络层的*顺序*特性。集合通信适用于对同一数据的*并行*运算。
 

@@ -16,7 +16,7 @@ subtitle: "打破同步屏障"
 </div>
 
 !!! abstract "承接：第三至第四部分"
-    [第三部分](../collectives/11-primitives-properties.md)确立了集合通信的成本。[第四部分](../parallelism/14-data-parallelism-associativity.md)指出数据并行每一步都需要 AllReduce。本章追问：如果我们同步得*更少*——甚至完全不同步呢？权衡在于通信节省与陈旧／发散梯度带来的收敛退化之间。
+    [第三部分](../collectives/11-primitives-properties.md)确立了集合通信（collective communication）的成本。[第四部分](../parallelism/14-data-parallelism-associativity.md)指出数据并行（Data Parallelism）每一步都需要 AllReduce。本章追问：如果我们同步得*更少*——甚至完全不同步呢？权衡在于通信节省与陈旧／发散梯度带来的收敛退化之间。
 
 ## 同步税
 

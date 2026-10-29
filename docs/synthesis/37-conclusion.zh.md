@@ -47,8 +47,8 @@ $$\text{MFU} = \frac{\text{Achieved FLOPs}}{\text{Peak FLOPs}} = \frac{6 \cdot \
 | 张量并行 | 模型（层内） | 数据 | 激活 AllReduce |
 | 流水线并行 | 模型（层间） | 数据 | 激活点对点 |
 | 专家并行 | 专家 | 路由器、注意力 | token All-to-All |
-| 序列并行 | 序列 | 模型 | AllGather/ReduceScatter |
-| 上下文并行 | 上下文（注意力） | 模型 | Ring attention |
+| 序列并行（Sequence Parallelism） | 序列 | 模型 | AllGather/ReduceScatter |
+| 上下文并行（Context Parallelism） | 上下文（注意力） | 模型 | Ring attention |
 
 分布式训练的艺术在于组合这些策略；科学在于预测哪些组合会高效。
 
@@ -93,7 +93,7 @@ $$\text{MFU} = \frac{\text{Achieved FLOPs}}{\text{Peak FLOPs}} = \frac{6 \cdot \
 | GPU 到 GPU（NVLink） | ~900 GB/s | 张量并行 |
 | 节点到节点（InfiniBand） | ~50 GB/s | 流水线、数据并行 |
 
-LLaMA 3、DeepSeek-V3 和 Mixtral 都遵循这一模式。张量并行留在 NVLink 域内。流水线并行在必要时跨节点。数据并行处理最宽的通信域。
+LLaMA 3、DeepSeek-V3 和 Mixtral 都遵循这一模式。张量并行（Tensor Parallelism）留在 NVLink 域内。流水线并行（Pipeline Parallelism）在必要时跨节点。数据并行（Data Parallelism）处理最宽的通信域。
 
 ### 模式 2：架构与分布式协同演进
 
@@ -101,7 +101,7 @@ LLaMA 3、DeepSeek-V3 和 Mixtral 都遵循这一模式。张量并行留在 NVL
 
 - **GQA** 减少 KV 缓存和注意力通信
 - **MLA** 为进一步的极端序列长度进一步压缩 KV 缓存
-- **稀疏 MoE** 以亚线性激活实现专家并行
+- **稀疏 MoE** 以亚线性激活实现专家并行（Expert Parallelism）
 - **滑动窗口注意力** 使注意力内存与序列长度无关
 
 「模型架构」与「系统工程」之间的边界正在消融。DeepSeek-V3 的多头潜在注意力同时是一项 ML 创新和一项系统优化。
@@ -124,7 +124,7 @@ LLaMA 3、DeepSeek-V3 和 Mixtral 都遵循这一模式。张量并行留在 NVL
 | 组件 | 精度 | 理由 |
 |------|------|------|
 | 前向激活 | BF16 或 FP8 | 计算受限 |
-| 反向梯度 | BF16 | 梯度累积稳定性 |
+| 反向梯度 | BF16 | 梯度累积（Gradient Accumulation）稳定性 |
 | 主权重 | FP32 | 优化器稳定性 |
 | 通信 | BF16 | 带宽受限 |
 | KV 缓存 | FP8 或量化 | 内存受限 |
@@ -188,7 +188,7 @@ DeepSeek-V3 的 FP8 训练表明，即使前向/反向也能在仔细的损失�
 
 ### 陷阱 4：过早使用流水线并行
 
-流水线并行会引入气泡。对小模型而言，气泡开销超过内存节省。
+流水线并行会引入气泡（pipeline bubble）。对小模型而言，气泡开销超过内存节省。
 
 **解药**：只有在张量并行饱和 NVLink、且 FSDP 无法把每 GPU 内存降到足够低时，流水线并行才合理。通常这意味着参数 > 30B 的模型。
 
@@ -227,7 +227,7 @@ DeepSeek-V3 的 FP8 训练表明，即使前向/反向也能在仔细的损失�
 - 被抢占时缩容
 - 在部分故障下继续运行
 
-这需要动态的并行重配置和健壮的检查点机制。
+这需要动态的并行重配置和健壮的检查点（checkpoint）机制。
 
 ### 趋势 4：通信感知架构
 
@@ -255,10 +255,10 @@ DeepSeek-V3 的 FP8 训练表明，即使前向/反向也能在仔细的损失�
 
 ### 第 1 层：基础（第 1–13 章）
 
-- 屋顶线模型与基本概念
+- 屋顶线（roofline）模型与基本概念
 - alpha-beta 通信模型
 - 集合原语及其性质
-- 扩展律与临界批大小
+- 扩展律（scaling law）与临界批大小（critical batch size）
 
 **你能否**：给定模型规模和硬件估算训练时间？计算 70B 模型在 80GB GPU 上的内存需求？
 
@@ -274,9 +274,9 @@ DeepSeek-V3 的 FP8 训练表明，即使前向/反向也能在仔细的损失�
 ### 第 3 层：组合与容错（第 23–31 章）
 
 - 3D/4D/5D 并行组合
-- 设备网格抽象
+- 设备网格（Device Mesh）抽象
 - 容错与检查点
-- 混合精度与效率前沿
+- 混合精度（mixed precision）与效率前沿
 
 **你能否**：调试混合精度引起的损失尖峰？在内存约束下选择检查点粒度？设计容错训练流水线？
 
@@ -334,7 +334,7 @@ DeepSeek-V3 的 FP8 训练表明，即使前向/反向也能在仔细的损失�
 1. **系统设计**：你需要在 512 块 80GB H100 上训练一个 175B 参数的稠密 transformer。设计并行策略，估算每 GPU 内存，计算预期 MFU，并找出可能的瓶颈。
 
     ??? hint "思路"
-        从内存入手：$16\Psi = 2.8$ TB 静态。仅模型状态就需要至少 35 块 GPU，所以需要 ZeRO-3 或 3D 并行。试试 TP=8（节点内）、PP=8（64 层 / 8 阶段）、DP=8（512/64）。检查每微批的激活内存。由 $m$ 个微批估算气泡比例。通信：TP 占主导（第 13 章公式），DP AllReduce 可以重叠。初始目标 MFU 约 35–40%。
+        从内存入手：$16\Psi = 2.8$ TB 静态。仅模型状态就需要至少 35 块 GPU，所以需要 ZeRO-3 或 3D 并行。试试 TP=8（节点内）、PP=8（64 层 / 8 阶段）、DP=8（512/64）。检查每微批（micro-batch）的激活内存。由 $m$ 个微批估算气泡比例。通信：TP 占主导（第 13 章公式），DP AllReduce 可以重叠。初始目标 MFU 约 35–40%。
 
 2. **架构分析**：一个新模型提出「局部注意力」，每个 token 只关注 256 个邻近 token。分析这对分布式训练的影响：它如何影响张量并行？流水线并行？哪些通信模式会改变？
 
@@ -364,7 +364,7 @@ DeepSeek-V3 的 FP8 训练表明，即使前向/反向也能在仔细的损失�
 7. **对比分析**：在以下方面比较 LLaMA 3 405B、DeepSeek-V3 671B 和 Mixtral 8x22B：(a) 推理时每 GPU 内存，(b) 每次前向的 FLOPs，(c) 在 1024 块 H100 上的预期训练吞吐。哪个训练最高效？哪个推理最高效？
 
     ??? hint "思路"
-        (a) 推理内存（FP16）：LLaMA 405B → 810 GB（约 11 块 H100）；DeepSeek 总计 671B 但激活 37B → 总计 1.34 TB 但可卸载非激活专家；Mixtral 8×22B = 总计 176B，激活 44B → 352 GB。(b) 每 token FLOPs：LLaMA $2 \times 405B$；DeepSeek $2 \times 37B$（MoE）；Mixtral $2 \times 44B$（MoE）。(c) 训练：DeepSeek 的 MoE + FP8 给出每 GPU 最高的 tokens/s；LLaMA 405B 需要最多的通信。**训练最高效**：DeepSeek（FP8 + 稀疏）。**推理最高效**：Mixtral（激活参数最少，占用 GPU 最少）。
+        (a) 推理内存（FP16）：LLaMA 405B → 810 GB（约 11 块 H100）；DeepSeek 总计 671B 但激活 37B → 总计 1.34 TB 但可卸载（offloading）非激活专家；Mixtral 8×22B = 总计 176B，激活 44B → 352 GB。(b) 每 token FLOPs：LLaMA $2 \times 405B$；DeepSeek $2 \times 37B$（MoE）；Mixtral $2 \times 44B$（MoE）。(c) 训练：DeepSeek 的 MoE + FP8 给出每 GPU 最高的 tokens/s；LLaMA 405B 需要最多的通信。**训练最高效**：DeepSeek（FP8 + 稀疏）。**推理最高效**：Mixtral（激活参数最少，占用 GPU 最少）。
 
 ## 致谢
 

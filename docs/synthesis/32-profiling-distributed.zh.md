@@ -16,7 +16,7 @@ subtitle: "并行系统的插桩、测量与优化"
 </div>
 
 !!! abstract "承接：前面所有部分"
-    最后的这一部分综合了一切。你已经理解了**屋顶线与估算**（[第一部分](../foundations/01-scale-imperative.md)）、**最优资源分配**（[第二部分](../scaling-laws/07-compute-loss-surface.md)）、**集合通信成本**（[第三部分](../collectives/11-primitives-properties.md)）、**并行策略**（[第四部分](../parallelism/14-data-parallelism-associativity.md)）、**内存管理**（[第五部分](../memory/19-memory-equation.md)）、**组合**（[第六部分](../composition/23-device-mesh.md)）与**效率技术**（[第七部分](../efficiency/28-gradient-compression.md)）。现在我们应用这些知识：诊断真实系统、调查瓶颈，并分析最先进的训练任务。
+    最后的这一部分综合了一切。你已经理解了**屋顶线（roofline）与估算**（[第一部分](../foundations/01-scale-imperative.md)）、**最优资源分配**（[第二部分](../scaling-laws/07-compute-loss-surface.md)）、**集合通信（collective communication）成本**（[第三部分](../collectives/11-primitives-properties.md)）、**并行策略**（[第四部分](../parallelism/14-data-parallelism-associativity.md)）、**内存管理**（[第五部分](../memory/19-memory-equation.md)）、**组合**（[第六部分](../composition/23-device-mesh.md)）与**效率技术**（[第七部分](../efficiency/28-gradient-compression.md)）。现在我们应用这些知识：诊断真实系统、调查瓶颈，并分析最先进的训练任务。
 
 !!! note "第八部分的代码风格"
     第八部分的代码示例是**教学骨架**——它们展示核心逻辑与接口，但省略了错误处理、边界情况与生产环境加固。它们的目的是说明剖析*策略*，而不是作为开箱即用的工具。生产环境剖析请直接使用 PyTorch Profiler、Nsight Systems 与 NCCL 调试日志。
@@ -811,7 +811,7 @@ class CollectiveTimePredictor:
 
 ## 剖析不同的并行策略
 
-### 数据并行剖析
+### 数据并行（Data Parallelism）剖析
 
 需要跟踪的关键指标：
 
@@ -1996,7 +1996,7 @@ def diagnose_memory_pressure():
 
     $$\boxed{\text{Optimal bucket size typically 10-50 MB; default 25 MB is reasonable}}$$
 
-6. **内存剖析**：跟踪一个训练步中的内存使用。找出峰值分配点。什么占用内存最多：参数、梯度、激活值，还是优化器状态？
+6. **内存剖析**：跟踪一个训练步中的内存使用。找出峰值分配点。什么占用内存最多：参数、梯度、激活值，还是优化器状态（optimizer states）？
 
 ??? success "解答"
     **内存剖析实现：**

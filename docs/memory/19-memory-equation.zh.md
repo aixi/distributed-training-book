@@ -107,7 +107,7 @@ $$M_{\text{opt}}^{\text{Adam}} = 2 \times \Psi \times 4 = 8\Psi \text{ bytes}$$
 
 ### 模型状态方程
 
-对于使用 AdamW 的混合精度训练：
+对于使用 AdamW 的混合精度（mixed precision）训练：
 
 | 组成部分 | 精度 | 每参数字节数 |
 |-----------|-----------|---------------------|
@@ -121,7 +121,7 @@ $$M_{\text{opt}}^{\text{Adam}} = 2 \times \Psi \times 4 = 8\Psi \text{ bytes}$$
 $$M_{\text{model}} = 16\Psi \text{ bytes}$$
 
 !!! note "实践"
-    大规模训练开始前，先算出 $16\Psi$ 并与 GPU HBM 比较。如果 $16\Psi$ > HBM，就必须先做分片或卸载，再调批大小。
+    大规模训练开始前，先算出 $16\Psi$ 并与 GPU HBM 比较。如果 $16\Psi$ > HBM，就必须先做分片或卸载（offloading），再调批大小。
 
 对于 7B 参数：$16 \times 7 \times 10^9 = 112$ GB
 
@@ -218,7 +218,7 @@ $$M_{\text{attention}} = L \cdot B \cdot A \cdot S^2 \cdot b_a$$
 
 $$32 \times 1 \times 32 \times 8192^2 \times 2 = 137.4 \text{ GB}$$
 
-仅仅注意力分数！这就是长上下文训练需要 Flash Attention 和序列并行的原因。
+仅仅注意力分数！这就是长上下文训练需要 Flash Attention 和序列并行（Sequence Parallelism）的原因。
 
 ### 激活内存公式
 
@@ -298,7 +298,7 @@ $$M_{\text{total}} = M_{\text{model}} + M_{\text{act}} + M_{\text{temp}} + M_{\t
 
 $$M_{\text{total}} = \underbrace{16\Psi}_{\text{model state}} + \underbrace{2LBSH(11 + S/128)}_{\text{activations}} + \underbrace{M_{\text{workspace}}}_{\text{temporary}} + \underbrace{f \cdot M_{\text{peak}}}_{\text{fragmentation}}$$
 
-其中 $f$ 是碎片因子（通常为 5–20%）。
+其中 $f$ 是碎片（fragmentation）因子（通常为 5–20%）。
 
 ### 完整示例：LLaMA-7B
 
@@ -384,7 +384,7 @@ Reality: Can't have all three
 这推动了所有内存优化技术：
 
 - **ZeRO**：跨 GPU 分片模型状态
-- **激活检查点**：用计算换激活内存
+- **激活检查点（checkpoint）**：用计算换激活内存
 - **卸载**：把 CPU/NVMe 当作扩展内存
 - **序列并行**：分片激活内存
 - **Flash Attention**：减少注意力内存
@@ -513,7 +513,7 @@ Memory Breakdown (% of total):
 └── Fragmentation: 5-10%
 ```
 
-**关键洞见**：优化器状态占主导。这就是 ZeRO 优先分片优化器状态的原因。
+**关键洞见**：优化器状态（optimizer states）占主导。这就是 ZeRO 优先分片优化器状态的原因。
 
 ### 逐层分析
 

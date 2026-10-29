@@ -204,7 +204,7 @@ def expert_choice_routing(tokens, router_logits, capacity):
 
 ## AlltoAll 通信模式
 
-专家并行需要一种独特的通信模式：AlltoAll。
+专家并行（Expert Parallelism）需要一种独特的通信模式：AlltoAll。
 
 ### 为什么是 AlltoAll？
 
@@ -548,7 +548,7 @@ GPU P-1: Expert 2(P-1), Expert 2P-1
 
 **情形 3：$E < P$（专家被分片到多块 GPU）**
 
-每个专家内部使用张量并行：
+每个专家内部使用张量并行（Tensor Parallelism）：
 ```
 Expert 0: GPU 0, GPU 1 (TP=2)
 Expert 1: GPU 2, GPU 3 (TP=2)
@@ -1653,7 +1653,7 @@ class MoETransformer(nn.Module):
     | **注意力时间 > AlltoAll 时间** | 否则分发无法被完全隐藏 | 增大批大小或减小 EP |
     | **缓冲区内存** | 需要同时持有发送 + 接收缓冲区 | 预留额外内存 |
     | **路由需提前计算** | 必须在注意力前知道目的地 | 增加依赖关系的复杂性 |
-    | **反向传播复杂性** | 梯度要穿过异步操作 | 谨慎使用梯度检查点 |
+    | **反向传播复杂性** | 梯度要穿过异步操作 | 谨慎使用梯度检查点（checkpoint） |
     | **无数据依赖** | 分发的输入不能依赖注意力输出 | 层架构的约束 |
 
     **重叠何时有效：**
@@ -1747,7 +1747,7 @@ class MoETransformer(nn.Module):
     |-------|------|---------|
     | 张量并行 | 4 | {12, 13, 14, 15} |
     | 专家并行 | 8 | {1, 5, 9, 13, 17, 21, 25, 29} |
-    | 数据并行 | 2 | {13, 45} |
+    | 数据并行（Data Parallelism） | 2 | {13, 45} |
 
     **验证代码：**
 

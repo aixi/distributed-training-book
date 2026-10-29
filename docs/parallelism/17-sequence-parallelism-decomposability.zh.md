@@ -14,7 +14,7 @@ subtitle: "沿序列维度分片"
 !!! abstract "本章导览"
     **前置知识**：[第 11 章](../collectives/11-primitives-properties.md)（AllGather、ReduceScatter、AlltoAll）、[第 15 章](15-tensor-parallelism-linearity.md)（张量并行与 Megatron-LM 模式）
 
-    **核心洞见**：序列并行利用注意力的*可分解性*——具体说是在线 softmax（online softmax）的结合律——沿序列维度拆分计算。Megatron SP 把非张量并行区域（LayerNorm、Dropout）分片以节省激活内存，而上下文并行（context parallelism，Ring Attention、Ulysses）则能处理单块 GPU 内存放不下的超长序列。
+    **核心洞见**：序列并行利用注意力的*可分解性*——具体说是在线 softmax（online softmax）的结合律——沿序列维度拆分计算。Megatron SP 把非张量并行（Tensor Parallelism）区域（LayerNorm、Dropout）分片以节省激活内存，而上下文并行（context parallelism，Ring Attention、Ulysses）则能处理单块 GPU 内存放不下的超长序列。
 
 ## 为什么需要序列并行？
 
@@ -941,7 +941,7 @@ class SequenceParallelAttention(nn.Module):
     | 方法 | 总通信量 | 每步延迟 |
     |--------|-------------|------------------|
     | Ring Attention | 32.2 GB | 15 次 P2P 传输 |
-    | Ulysses | 4.03 GB | 2 次 AlltoAll 集合通信 |
+    | Ulysses | 4.03 GB | 2 次 AlltoAll 集合通信（collective communication） |
 
     $$\frac{V_{\text{Ring}}}{V_{\text{Ulysses}}} = \frac{32.2}{4.03} = 8\times$$
 
@@ -1536,7 +1536,7 @@ $$M_{\text{Flash+Ring}} = \underbrace{3 \times \frac{S}{P} \times d}_{\text{Q,K,
 1. **两类序列并行**：
 
    - Megatron 风格：减少 LayerNorm/Dropout 的激活内存
-   - 上下文并行：把注意力计算本身分布出去
+   - 上下文并行（Context Parallelism）：把注意力计算本身分布出去
 
 2. **在线 softmax 使分解成为可能**：注意力可以用结合式的状态更新增量计算。
 

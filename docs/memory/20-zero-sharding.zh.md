@@ -4,11 +4,11 @@ subtitle: "通过分片消除内存冗余"
 ---
 
 <div class="chapter-opener" markdown>
-第 19 章的内存方程揭示了一种巨大的冗余：每块 GPU 都存储着优化器状态、梯度和参数的完全相同副本。ZeRO 通过分片（sharding）消除这种冗余——把这些张量划分到各设备上。其结果是内存随 GPU 数量近乎线性地扩展。
+第 19 章的内存方程揭示了一种巨大的冗余：每块 GPU 都存储着优化器状态（optimizer states）、梯度和参数的完全相同副本。ZeRO 通过分片（sharding）消除这种冗余——把这些张量划分到各设备上。其结果是内存随 GPU 数量近乎线性地扩展。
 </div>
 
 <div class="investigation-question" markdown>
-**问题**：有 8 块 GPU，你就有 8 倍的聚合内存。但标准数据并行仍然把你限制在单块 GPU 的内存上。如何在不从根本上改变训练算法的前提下，拿到完整的 8 倍？
+**问题**：有 8 块 GPU，你就有 8 倍的聚合内存。但标准数据并行（Data Parallelism）仍然把你限制在单块 GPU 的内存上。如何在不从根本上改变训练算法的前提下，拿到完整的 8 倍？
 </div>
 
 !!! abstract "本章导览"
@@ -735,7 +735,7 @@ class ZeROOptimizer:
 
 ### 理论极限
 
-对于混合精度 AdamW 训练：
+对于混合精度（mixed precision） AdamW 训练：
 
 | 阶段 | 每 GPU 内存 | $P \to \infty$ 时的极限 |
 |-------|----------------|-------------------------|
@@ -772,9 +772,9 @@ ZeRO 分片模型状态，但**激活在数据并行各 rank 之间仍然是复�
 **激活占了主导！**
 
 解决方案：
-1. **激活检查点**（第 21 章）
+1. **激活检查点（checkpoint，第 21 章）
 2. **ZeRO-R**：跨 DP rank 划分激活
-3. **卸载**：把激活移到 CPU（第 22 章）
+3. **卸载（offloading）**：把激活移到 CPU（第 22 章）
 
 ### ZeRO-R：激活划分
 
@@ -1136,7 +1136,7 @@ Pipeline Stages: [Stage 0] → [Stage 1] → [Stage 2] → [Stage 3]
     - 当通信带宽受限时
     - 不推荐用于超大模型（小层可忽略）
 
-5. **激活划分**：为注意力层实现 ZeRO-R 激活划分。它与序列并行如何相互作用？
+5. **激活划分**：为注意力层实现 ZeRO-R 激活划分。它与序列并行（Sequence Parallelism）如何相互作用？
 
 ??? success "解答"
     **ZeRO-R 激活划分：**
@@ -1369,7 +1369,7 @@ Pipeline Stages: [Stage 0] → [Stage 1] → [Stage 2] → [Stage 3]
     | 条件 | 问题 | 解决方案 |
     |-----------|-------|----------|
     | $T_g > L \cdot T_c$ | 无法隐藏全部通信 | 降低 $T_g$（更大带宽） |
-    | $k > L$ | 需要的层数超过实际层数 | 流水线或梯度累积 |
+    | $k > L$ | 需要的层数超过实际层数 | 流水线或梯度累积（Gradient Accumulation） |
     | 内存受限 | 无法缓冲 $k$ 层 | 减小预取深度，接受开销 |
 
     **最优预取深度表：**
@@ -1397,4 +1397,4 @@ Pipeline Stages: [Stage 0] → [Stage 1] → [Stage 2] → [Stage 3]
 
 5. **激活仍是瓶颈**：ZeRO 解决的是模型状态；激活内存需要独立的解决方案。
 
-6. **可与 TP 和 PP 组合**：ZeRO 运行在数据并行维度上，与张量并行和流水线并行正交。
+6. **可与 TP 和 PP 组合**：ZeRO 运行在数据并行维度上，与张量并行（Tensor Parallelism）和流水线并行（Pipeline Parallelism）正交。

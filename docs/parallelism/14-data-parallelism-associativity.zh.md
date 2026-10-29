@@ -4,7 +4,7 @@ subtitle: "为什么梯度累积使分布式训练成为可能"
 ---
 
 <div class="chapter-opener" markdown>
-数据并行之所以成立，是因为梯度累积满足结合律。这不是实现上的细节——它是让整套方法得以成立的数学基础。理解这一基础，既能揭示数据并行的威力，也能揭示它的局限。
+数据并行（Data Parallelism）之所以成立，是因为梯度累积（Gradient Accumulation）满足结合律。这不是实现上的细节——它是让整套方法得以成立的数学基础。理解这一基础，既能揭示数据并行的威力，也能揭示它的局限。
 </div>
 
 <div class="investigation-question" markdown>
@@ -16,7 +16,7 @@ subtitle: "为什么梯度累积使分布式训练成为可能"
 </div>
 
 !!! abstract "承上启下：第三部分 集合通信"
-    本部分假定你已掌握**集合通信操作**——尤其是 [AllReduce（第 11 章）](../collectives/11-primitives-properties.md)、[环形与树形算法（第 12 章）](../collectives/12-ring-tree-algorithms.md)以及[成本建模（第 13 章）](../collectives/13-collective-cost-model.md)。我们在此推导的每种并行策略都依赖特定的集合通信操作。数据并行——我们的第一种策略——使用 AllReduce 来同步梯度。
+    本部分假定你已掌握**集合通信（collective communication）操作**——尤其是 [AllReduce（第 11 章）](../collectives/11-primitives-properties.md)、[环形与树形算法（第 12 章）](../collectives/12-ring-tree-algorithms.md)以及[成本建模（第 13 章）](../collectives/13-collective-cost-model.md)。我们在此推导的每种并行策略都依赖特定的集合通信操作。数据并行——我们的第一种策略——使用 AllReduce 来同步梯度。
 
 ## 数学基础
 
@@ -1097,7 +1097,7 @@ model = DDP(
 
 5. **浮点数破坏了精确结合律**：要确定性，需固定归约顺序并禁用优化。
 
-6. **梯度压缩以计算换带宽**：Top-K、量化和低秩方法可实现 10-100 倍压缩。
+6. **梯度压缩（Gradient Compression）以计算换带宽**：Top-K、量化和低秩方法可实现 10-100 倍压缩。
 
 7. **扩展有极限**：对大模型，超过约 100 块 GPU 后，单靠数据并行就会受限于通信。
 

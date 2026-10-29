@@ -4,7 +4,7 @@ subtitle: "当代数遇上硬件层次"
 ---
 
 <div class="chapter-opener" markdown>
-集合通信是代数的，网络却不是。同一个 AllReduce 在某种拓扑上可能最优，在另一种拓扑上却糟糕透顶。拓扑感知的集合通信通过选择尊重硬件层次的算法，来调和这两重现实。
+集合通信（collective communication）是代数的，网络却不是。同一个 AllReduce 在某种拓扑上可能最优，在另一种拓扑上却糟糕透顶。拓扑感知的集合通信通过选择尊重硬件层次的算法，来调和这两重现实。
 </div>
 
 <div class="investigation-question" markdown>

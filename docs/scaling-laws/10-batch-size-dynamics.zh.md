@@ -4,7 +4,7 @@ subtitle: "临界批大小、学习率缩放与 LARS/LAMB"
 ---
 
 <div class="chapter-opener" markdown>
-批大小不只是一个内存参数——它从根本上影响学习动力学。存在一个临界批大小，超过它之后收益会迅速递减。理解这一点，对于扩展到数千块 GPU 至关重要。
+批大小不只是一个内存参数——它从根本上影响学习动力学。存在一个临界批大小（critical batch size），超过它之后收益会迅速递减。理解这一点，对于扩展到数千块 GPU 至关重要。
 </div>
 
 <div class="investigation-question" markdown>
@@ -247,7 +247,7 @@ $$w_l \leftarrow w_l - \eta \cdot \phi_l \cdot (r_l + \lambda w_l)$$
 
 ## 批大小与时间的权衡
 
-更大的批大小能让你在更多 GPU 上做数据并行。但收益会递减。
+更大的批大小能让你在更多 GPU 上做数据并行（Data Parallelism）。但收益会递减。
 
 ### 扩展效率
 
@@ -511,7 +511,7 @@ $$\text{noise scale} = \frac{||\text{Var}(\nabla L)||}{||\mathbb{E}[\nabla L]||^
 
     这就是 LARS 能在标准 SGD 失败的情况下支持 32K+ 批大小训练的原因。
 
-5. **梯度累积**：你有 8 块 GPU，每块批 32（共 256），但需要有效批大小 2048。需要多少累积步？如果每次前向-反向需要 100ms，all-reduce 需要 20ms，每个有效步需要多长时间？
+5. **梯度累积（Gradient Accumulation）**：你有 8 块 GPU，每块批 32（共 256），但需要有效批大小 2048。需要多少累积步？如果每次前向-反向需要 100ms，all-reduce 需要 20ms，每个有效步需要多长时间？
 
 ??? success "解答"
     **已知：**

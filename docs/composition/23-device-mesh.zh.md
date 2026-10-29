@@ -8,7 +8,7 @@ subtitle: "跨多维硬件组织并行"
 </div>
 
 <div class="investigation-question" markdown>
-**问题**：你有 4096 块 GPU，组织为 512 个节点 × 每节点 8 块 GPU。你如何表达「节点内张量并行、跨节点数据并行」？什么样的抽象能让这类组合既自然又正确？
+**问题**：你有 4096 块 GPU，组织为 512 个节点 × 每节点 8 块 GPU。你如何表达「节点内张量并行（Tensor Parallelism）、跨节点数据并行」？什么样的抽象能让这类组合既自然又正确？
 </div>
 
 <div class="notation-banner" markdown>
@@ -1326,6 +1326,6 @@ mesh = auto_mesh(topology, dp_degree=64, tp_degree=8, pp_degree=1)
 
 4. **分片规格是声明式的**：描述你*想要*什么分布，而不是*如何*实现。
 
-5. **重分布是系统化的**：改变分片规格可映射到已知的集合通信操作。
+5. **重分布是系统化的**：改变分片规格可映射到已知的集合通信（collective communication）操作。
 
 6. **自动构建是可行的**：给定拓扑与并行度，网格可以自动构建。

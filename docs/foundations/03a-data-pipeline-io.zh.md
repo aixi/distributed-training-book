@@ -17,7 +17,7 @@ subtitle: "第四重上限：喂饱加速器"
 
 ## 第四重上限
 
-扩展屋顶线已经给了我们三重上限：
+扩展屋顶线（roofline）已经给了我们三重上限：
 
 $$\text{Perf} \le \min(\text{Compute}, \text{HBM}, \text{Network})$$
 

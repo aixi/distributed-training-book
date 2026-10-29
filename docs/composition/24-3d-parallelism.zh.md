@@ -4,7 +4,7 @@ subtitle: "经典组合：DP × TP × PP"
 ---
 
 <div class="chapter-opener" markdown>
-没有任何单一并行策略能扩展到数千块 GPU。数据并行浪费内存。张量并行淹没在通信里。流水线并行产生气泡。解决方案：把三者组合起来，让各自在最优的规模上工作。
+没有任何单一并行策略能扩展到数千块 GPU。数据并行（Data Parallelism）浪费内存。张量并行（Tensor Parallelism）淹没在通信里。流水线并行（Pipeline Parallelism）产生气泡（pipeline bubble）。解决方案：把三者组合起来，让各自在最优的规模上工作。
 </div>
 
 <div class="investigation-question" markdown>
@@ -28,7 +28,7 @@ subtitle: "经典组合：DP × TP × PP"
 
 $$\text{Memory per GPU} = M_{\text{model}} + M_{\text{optimizer}} + M_{\text{activation}}$$
 
-对于混合精度下使用 Adam 优化器的 175B 模型：
+对于混合精度（mixed precision）下使用 Adam 优化器的 175B 模型：
 
 $$M_{\text{model}} + M_{\text{optimizer}} = 175\text{B} \times (2 + 2 + 8 + 4) = 2.80\text{ TB}$$
 
@@ -115,7 +115,7 @@ Node 0 (8 GPUs):                Node 1 (8 GPUs):
 
 ## 映射到设备网格
 
-借助第 23 章的设备网格抽象，三维并行就变成了一个网格配置：
+借助第 23 章的设备网格（Device Mesh）抽象，三维并行就变成了一个网格配置：
 
 ```python
 from typing import Tuple, Optional
@@ -239,7 +239,7 @@ Stage 0 → Stage 1 → Stage 2 → ... → Stage 7
     activations  activations  activations
 ```
 
-**带宽**：每个微批边界 $H \cdot B$（远小于 TP）。
+**带宽**：每个微批（micro-batch）边界 $H \cdot B$（远小于 TP）。
 
 ### 数据并行的通信
 
@@ -868,7 +868,7 @@ class InterleavedPipelineSchedule:
 
 ### ZeRO-1 + 三维并行
 
-沿 DP 维度分片优化器状态：
+沿 DP 维度分片优化器状态（optimizer states）：
 
 ```
 Before ZeRO-1:
@@ -1230,7 +1230,7 @@ Memory savings: (D-1)/D of optimizer memory
 
     **通信影响：**
 
-    | 集合通信 | 标准 (DP,PP,TP) | 另一种 (DP,TP,PP) |
+    | 集合通信（collective communication） | 标准 (DP,PP,TP) | 另一种 (DP,TP,PP) |
     |------------|---------------------|------------------------|
     | TP AllReduce | 连续 → NVLink | 跨步 → 可能跨节点 |
     | PP Send/Recv | 跨步 → 跨节点 | 连续 → 可能走 NVLink |
