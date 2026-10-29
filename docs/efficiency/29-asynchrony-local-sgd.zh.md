@@ -881,7 +881,7 @@ def optimal_sync_interval(compute_time: float, comm_time: float,
     在异步 SGD 中，当 worker $i$ 读取参数时，平均而言已有 $(P-1)/2$ 个其他 worker 在 $i$ 开始计算之后推送了更新。
 
     **对均匀计算时间：**
-    $$\mathbb{E}[\tau] = \frac{P - 1}{2} = \frac{16 - 1}{2} = \boxed{7.5 \text{ 步}}$$
+    $$\mathbb{E}[\tau] = \frac{P - 1}{2} = \frac{16 - 1}{2} = \boxed{7.5 \text{ steps}}$$
 
     **为什么？**
     - 当 worker $i$ 在时刻 $t$ 读取时
@@ -889,7 +889,7 @@ def optimal_sync_interval(compute_time: float, comm_time: float,
     - 第 $i$ 个 worker 的梯度所用的参数，平均陈旧了 7.5 次更新
 
     **最大陈旧度（最坏情形）：**
-    $$\tau_{max} = P - 1 = 15 \text{ 步}$$
+    $$\tau_{max} = P - 1 = 15 \text{ steps}$$
 
     **学习率调整：**
 
@@ -969,7 +969,7 @@ def optimal_sync_interval(compute_time: float, comm_time: float,
     **计算最优 H：**
     $$H^* = \sqrt{\frac{50}{1000 \times 0.001}} = \sqrt{\frac{50}{1}} = \sqrt{50} \approx 7.07$$
 
-    $$\boxed{H^* = 7 \text{ 步}}$$
+    $$\boxed{H^* = 7 \text{ steps}}$$
 
     **验证：**
 
@@ -993,7 +993,7 @@ def optimal_sync_interval(compute_time: float, comm_time: float,
     | 低敏感 | 500 | 10 |
 
     **建议：**
-    $$\boxed{H = 5\text{-}10 \text{ 步（典型训练）}}$$
+    $$\boxed{H = 5\text{-}10 \text{ steps for typical training}}$$
 
     从 $H=7$ 开始，根据收敛监控调整。
 
@@ -1145,7 +1145,7 @@ def optimal_sync_interval(compute_time: float, comm_time: float,
     3. **通信**：随 $H$ 线性减少（H=10 时 10×）
     4. **准确率**：在简单任务上差异极小（<0.5%）
 
-    $$\boxed{\text{本地 SGD：快 1.75×，通信少 10×，准确率损失 <0.5\%}}$$
+    $$\boxed{\text{Local SGD: 1.75× faster, 10× less communication, <0.5\% accuracy loss}}$$
 
 4. **DiLoCo 实现**：用 Adam 作内部优化器、Nesterov 作外部优化器实现 DiLoCo。在语言建模任务上与之标准的本地 SGD 对比。
 
@@ -1299,7 +1299,7 @@ def optimal_sync_interval(compute_time: float, comm_time: float,
     | 外部学习率（Nesterov） | 0.7 |
     | 外部动量 | 0.9 |
 
-    $$\boxed{\text{DiLoCo：困惑度低 8\%，比本地 SGD 更稳定}}$$
+    $$\boxed{\text{DiLoCo: 8\% lower perplexity, more stable than Local SGD}}$$
 
 5. **Hogwild! 稀疏阈值**：理论上，在什么稀疏水平下 Hogwild! 的收敛速率与加锁 SGD 相同？用实验验证。
 
@@ -1339,7 +1339,7 @@ def optimal_sync_interval(compute_time: float, comm_time: float,
 
     $$\rho < \frac{0.1}{0.01 \times 16 \times 100} = \frac{0.1}{16} \approx 0.00625$$
 
-    $$\boxed{\rho < 0.6\% \text{（16 个 worker）}}$$
+    $$\boxed{\rho < 0.6\% \text{ sparsity for 16 workers}}$$
 
     **通用公式：**
     $$\rho_{threshold} \approx \frac{1}{P}$$
@@ -1430,7 +1430,7 @@ def optimal_sync_interval(compute_time: float, comm_time: float,
 
     **结论：**
 
-    $$\boxed{\text{16 个 worker 时，稀疏度} < 1/P \approx 6\% \text{ 才能与加锁 SGD 匹配}}$$
+    $$\boxed{\text{Sparsity} < 1/P \approx 6\% \text{ for 16-worker Hogwild! to match locked SGD}}$$
 
     对稠密模型（稀疏度 > 10%），Hogwild! 明显退化，不应在没有额外技巧（梯度裁剪、更小的学习率）的情况下使用。
 
@@ -1655,7 +1655,7 @@ def optimal_sync_interval(compute_time: float, comm_time: float,
     | 中等（0.1 < α < 0.5） | FedProx |
     | 严重（α < 0.1） | SCAFFOLD |
 
-    $$\boxed{\text{SCAFFOLD 最能应对异构：} \alpha=0.01 \text{ 时准确率高 11\%}}$$
+    $$\boxed{\text{SCAFFOLD handles heterogeneity best: 11\% higher accuracy at } \alpha=0.01}$$
 
 ## 关键要点
 

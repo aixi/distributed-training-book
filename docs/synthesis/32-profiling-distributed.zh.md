@@ -1447,7 +1447,7 @@ def diagnose_memory_pressure():
 
     注意：单 GPU MFU 通常低于多 GPU 张量并行（20–30% 对 40–50%），原因是内存带宽限制。
 
-    $$\boxed{\text{典型单 GPU MFU：20–30\%；优化后的多 GPU：40–50\%}}$$
+    $$\boxed{\text{Typical single-GPU MFU: 20-30\%; optimized multi-GPU: 40-50\%}}$$
 
 2. **Alpha-Beta 校准**：为你的集群测量 α 与 β。使用多种消息大小（1KB 到 1GB）。绘制预测时间与实际时间的对比图。线性模型有多准确？
 
@@ -1727,7 +1727,7 @@ def diagnose_memory_pressure():
     - 55% 的通信时间被计算隐藏
     - 剩余 45% 是暴露的通信（关键路径）
 
-    $$\boxed{\text{典型 DDP 重叠效率：50–80\%；40–70\% 的通信被隐藏}}$$
+    $$\boxed{\text{Typical DDP overlap efficiency: 50-80\%; 40-70\% of comm hidden}}$$
 
 4. **掉队者检测**：在 8 块 GPU 上运行训练。人为拖慢一块 GPU（插入 sleep）。测量对整体吞吐的影响。实现自动掉队检测。
 
@@ -1877,7 +1877,7 @@ def diagnose_memory_pressure():
     2. 排除持续掉队的节点
     3. 异步 SGD（需权衡收敛性）
 
-    $$\boxed{\text{1/8 GPU 上 50ms 的掉队者造成 } \sim77\% \text{ 的吞吐损失}}$$
+    $$\boxed{\text{50ms straggler on 1/8 GPUs causes } \sim77\% \text{ throughput loss}}$$
 
 5. **桶优化**：用不同桶大小（1MB、25MB、100MB、250MB）剖析 DDP。测量每种配置的步时间。你的模型的最优桶大小是多少？
 
@@ -1994,7 +1994,7 @@ def diagnose_memory_pressure():
     - 更小的桶 → 更多 AllReduce 调用 → 更高的延迟开销
     - 更大的桶 → 与计算的重叠更少
 
-    $$\boxed{\text{最优桶大小通常为 10–50 MB；默认 25 MB 是合理的}}$$
+    $$\boxed{\text{Optimal bucket size typically 10-50 MB; default 25 MB is reasonable}}$$
 
 6. **内存剖析**：跟踪一个训练步中的内存使用。找出峰值分配点。什么占用内存最多：参数、梯度、激活值，还是优化器状态？
 
@@ -2170,7 +2170,7 @@ def diagnose_memory_pressure():
     2. 激活值主导动态内存，并随批大小扩展
     3. 峰值内存 ≈ 参数 + 梯度 + 优化器 + 激活值
 
-    $$\boxed{\text{激活值：36\%，优化器：32\%，参数+梯度：32\%}}$$
+    $$\boxed{\text{Activations: 36\%, Optimizer: 32\%, Params+Grads: 32\%}}$$
 
 ## 关键要点
 

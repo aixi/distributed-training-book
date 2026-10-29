@@ -1016,7 +1016,7 @@ Pipeline Stages: [Stage 0] → [Stage 1] → [Stage 2] → [Stage 3]
 
     **计算时间：**
 
-    每步 FLOPs：$F = 6\Psi \times B \times S$（批 × 序列 token）
+    每步 FLOPs：$F = 6\Psi \times B \times S$（$B \cdot S$ 个 token）
 
     $$T_{\text{compute}} = \frac{F}{\text{throughput}} = \frac{6\Psi \times B \times S}{150 \times 10^{12}}$$
 

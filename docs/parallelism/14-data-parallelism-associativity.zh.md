@@ -900,7 +900,7 @@ model = DDP(
     | 累积（4×32） | 4 × 100 = 400 ms | 40 ms | 440 ms |
     | 直接（128） | 400 ms | 40 ms | 440 ms |
 
-    $$\boxed{\text{两种方法耗时相同：440 毫秒}}$$
+    $$\boxed{\text{Both methods take the same time: 440 ms}}$$
 
     **为什么相等？**
 

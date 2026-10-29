@@ -221,11 +221,11 @@ LLaMA 1 和 2 有意过训练：
 
 如果推理成本 >> 训练成本，就过训练更小的模型。
 
-**盈亏平衡分析**：令 $r = \frac{\text{推理 token 数}}{\text{训练 token 数}}$
+**盈亏平衡分析**：令 $r = \frac{\text{inference tokens}}{\text{training tokens}}$
 
 按因子 $k$ 过训练（用 $kD$ 个 token 训练 $\Psi/k$ 个参数）在以下条件下有利可图：
 
-$$r > \frac{k^2 \cdot \text{每 token 训练成本}}{\text{每参数推理成本}}$$
+$$r > \frac{k^2 \cdot \text{training cost per token}}{\text{inference cost per param}}$$
 
 按典型比例，当服务超过 $10^{13}$ 个 token 时，过训练开始划算。
 
@@ -301,7 +301,7 @@ $$L(\Psi, D, r) = L(\Psi, D_{\text{unique}}) + \gamma \cdot \log(r)$$
     **求解最优模型规模：**
     $$\Psi^* = \sqrt{\frac{C}{120}} = \sqrt{\frac{10^{22}}{120}} = \sqrt{8.33 \times 10^{19}}$$
 
-    $$\Psi^* = 9.13 \times 10^9 \approx \boxed{9.1\text{B 参数}}$$
+    $$\Psi^* = 9.13 \times 10^9 \approx \boxed{9.1\text{B parameters}}$$
 
     **最优 token 数量：**
     $$D^* = 20 \times \Psi^* = 20 \times 9.1 \times 10^9 = \boxed{182\text{B token}}$$
@@ -330,15 +330,15 @@ $$L(\Psi, D, r) = L(\Psi, D_{\text{unique}}) + \gamma \cdot \log(r)$$
 
     $$\Psi^* = \sqrt{\frac{C}{120}} = \sqrt{\frac{2.7 \times 10^{22}}{120}} = \sqrt{2.25 \times 10^{20}}$$
 
-    $$\Psi^* = 1.5 \times 10^{10} = \boxed{15\text{B 参数}}$$
+    $$\Psi^* = 1.5 \times 10^{10} = \boxed{15\text{B parameters}}$$
 
     $$D^* = 20 \times \Psi^* = 20 \times 15 \times 10^9 = \boxed{300\text{B token}}$$
 
     **第 3 部分：过参数化/欠参数化倍数**
 
-    $$\text{过参数化} = \frac{\Psi_{\text{actual}}}{\Psi^*} = \frac{30\text{B}}{15\text{B}} = \boxed{2\times \text{ 过参数化}}$$
+    $$\text{Overparameterization} = \frac{\Psi_{\text{actual}}}{\Psi^*} = \frac{30\text{B}}{15\text{B}} = \boxed{2\times \text{ overparameterized}}$$
 
-    $$\text{欠训练} = \frac{D^*}{D_{\text{actual}}} = \frac{300\text{B}}{150\text{B}} = 2\times \text{ 数据欠训练}$$
+    $$\text{Undertraining} = \frac{D^*}{D_{\text{actual}}} = \frac{300\text{B}}{150\text{B}} = 2\times \text{ undertrained on data}$$
 
     **总结：**
 
@@ -374,7 +374,7 @@ $$L(\Psi, D, r) = L(\Psi, D_{\text{unique}}) + \gamma \cdot \log(r)$$
 
     $$T = \frac{\$5 \times 10^6}{\$0.0009} = 5.56 \times 10^9 \text{ million tokens}$$
 
-    $$T = \boxed{5.56 \times 10^{15} \text{ token} \approx 5.6 \text{ 千万亿 token}}$$
+    $$T = \boxed{5.56 \times 10^{15} \text{ tokens} \approx 5.6 \text{ quadrillion tokens}}$$
 
     **解读：**
 
@@ -385,7 +385,7 @@ $$L(\Psi, D, r) = L(\Psi, D_{\text{unique}}) + \gamma \cdot \log(r)$$
 
     作为参考，一个高流量推理服务每天可能服务约 1–10T token。按每天 5T token 计算：
 
-    $$\text{盈亏平衡时间} = \frac{5.6 \times 10^{15}}{5 \times 10^{12}} \approx 1{,}120 \text{ 天} \approx 3 \text{ 年}$$
+    $$\text{Break-even time} = \frac{5.6 \times 10^{15}}{5 \times 10^{12}} \approx 1{,}120 \text{ days} \approx 3 \text{ years}$$
 
     对超高流量推理，过训练可能划算——但盈亏平衡时间很大程度上取决于实际服务量。
 
@@ -396,7 +396,7 @@ $$L(\Psi, D, r) = L(\Psi, D_{\text{unique}}) + \gamma \cdot \log(r)$$
 
     如果 $D_{\text{max}} = 500\text{B}$ token，且最优比例为 $D^*/\Psi^* = 20$：
 
-    $$\Psi^* = \frac{D_{\text{max}}}{20} = \frac{500 \times 10^9}{20} = \boxed{25\text{B 参数}}$$
+    $$\Psi^* = \frac{D_{\text{max}}}{20} = \frac{500 \times 10^9}{20} = \boxed{25\text{B parameters}}$$
 
     **所需计算量：**
     $$C = 6\Psi D = 6 \times 25 \times 10^9 \times 500 \times 10^9 = 7.5 \times 10^{22} \text{ FLOPs}$$

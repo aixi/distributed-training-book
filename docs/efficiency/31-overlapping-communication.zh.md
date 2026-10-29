@@ -1035,7 +1035,7 @@ prof.export_chrome_trace("overlap_trace.json")
 
     **不重叠（顺序执行）：**
 
-    $$T_{\text{sequential}} = 50\text{ms（计算）} + 30\text{ms（通信）} = 80\text{ms}$$
+    $$T_{\text{sequential}} = 50\text{ms (compute)} + 30\text{ms (comm)} = 80\text{ms}$$
 
     **有重叠（流水化）：**
 
@@ -1055,7 +1055,7 @@ prof.export_chrome_trace("overlap_trace.json")
     - 桶 1-4：通信与下一桶的计算完全重叠
     - 桶 5：通信无法重叠（后面没有计算了）
 
-    $$T_{\text{overlapped}} = 50\text{ms（计算）} + 6\text{ms（最后一桶通信）} = 56\text{ms}$$
+    $$T_{\text{overlapped}} = 50\text{ms (compute)} + 6\text{ms (last bucket comm)} = 56\text{ms}$$
 
     **最大理论重叠：**
 
@@ -1070,7 +1070,7 @@ prof.export_chrome_trace("overlap_trace.json")
     | 加速比 | 1.43× |
     | 重叠比例 | **80%** |
 
-    $$\boxed{T_{\text{total}} = 56\text{ms}；\text{ 重叠} = 80\%}$$
+    $$\boxed{T_{\text{total}} = 56\text{ms}; \text{ Overlap} = 80\%}$$
 
 2. **桶大小优化**：你有 1GB 梯度和 100 Gbps 带宽。通信延迟为 100μs。找出使每桶通信时间最小的桶大小。最优的桶数是多少？
 
@@ -1119,7 +1119,7 @@ prof.export_chrome_trace("overlap_trace.json")
 
     **桶数：**
 
-    $$n = \frac{G}{B_{\text{opt}}} = \frac{1000\text{ MB}}{11.25\text{ MB}} \approx 89 \text{ 个桶}$$
+    $$n = \frac{G}{B_{\text{opt}}} = \frac{1000\text{ MB}}{11.25\text{ MB}} \approx 89 \text{ buckets}$$
 
     **验证：**
 
@@ -1157,7 +1157,7 @@ prof.export_chrome_trace("overlap_trace.json")
     | 25 MB | 40 | 84 ms | 95% |
     | 100 MB | 10 | 81 ms | 99% |
 
-    $$\boxed{B_{\text{opt}} \approx 11.25\text{ MB}；\text{ 90% 效率约需 } n \approx 89 \text{ 个桶}}$$
+    $$\boxed{B_{\text{opt}} \approx 11.25\text{ MB}; \text{ n} \approx 89 \text{ buckets for 90% efficiency}}$$
 
 3. **流调度**：实现一个简单的双流调度器，让反向传播在一个流上运行，同时另一个流执行 AllReduce。测量达到的重叠比例。
 
@@ -1357,7 +1357,7 @@ prof.export_chrome_trace("overlap_trace.json")
     3. CUDA 流调度开销
     4. 计算与 NCCL 之间的内存带宽争用
 
-    $$\boxed{\text{典型重叠比例：50-80\%，取决于计算／通信比}}$$
+    $$\boxed{\text{Typical overlap fraction: 50-80\% depending on compute/comm ratio}}$$
 
 4. **预取深度**：对 24 层的 ZeRO-3，若每次 AllGather 需 2ms、每层计算需 8ms，应预取多少层才能隐藏 AllGather 延迟？
 
@@ -1436,7 +1436,7 @@ prof.export_chrome_trace("overlap_trace.json")
     }
     ```
 
-    $$\boxed{k = 1 \text{ 层预取已足够（因 } T_{\text{compute}} > T_{\text{gather}}）}$$
+    $$\boxed{k = 1 \text{ layer prefetch is sufficient (since } T_{\text{compute}} > T_{\text{gather}})}$$
 
 5. **通信受限分析**：你的训练步显示 80ms 计算、120ms 通信，但总时间为 140ms。计算重叠比例。哪些技术可以改善它？
 
@@ -1530,7 +1530,7 @@ prof.export_chrome_trace("overlap_trace.json")
     print(f"Current overlap: {overlap:.1%}")
     ```
 
-    $$\boxed{\text{重叠} = 75\% \text{ 的计算，或 } 50\% \text{ 的通信被隐藏}}$$
+    $$\boxed{\text{Overlap} = 75\% \text{ of compute, or } 50\% \text{ of comm hidden}}$$
 
 6. **双缓冲**：实现双缓冲梯度 AllReduce。测量内存开销与重叠改善。
 
@@ -1736,7 +1736,7 @@ prof.export_chrome_trace("overlap_trace.json")
     - 对大批训练，这通常可接受
     - 可能需要略微调整学习率
 
-    $$\boxed{\text{双缓冲：加速 } \sim1.6\times\text{，代价是额外 } 4\Psi \text{ 字节内存}}$$
+    $$\boxed{\text{Double buffering: } \sim1.6\times \text{ speedup at cost of } 4\Psi \text{ bytes extra memory}}$$
 
 ## 关键要点
 

@@ -253,7 +253,7 @@ $$L(\Psi, D, q) = \frac{A}{\Psi^\alpha} + \frac{B}{(qD)^\beta} + L_\infty$$
     **求解最优模型规模：**
     $$\Psi^* = \sqrt{\frac{C}{120}} = \sqrt{\frac{10^{24}}{120}} = \sqrt{8.33 \times 10^{21}}$$
 
-    $$\Psi^* = 2.89 \times 10^{10.5} \approx \boxed{91\text{B 参数}}$$
+    $$\Psi^* = 2.89 \times 10^{10.5} \approx \boxed{91\text{B parameters}}$$
 
     **最优 token 数量：**
     $$D^* = 20 \times \Psi^* = 20 \times 91 \times 10^9 = \boxed{1.82\text{T token}}$$
@@ -288,7 +288,7 @@ $$L(\Psi, D, q) = \frac{A}{\Psi^\alpha} + \frac{B}{(qD)^\beta} + L_\infty$$
     $$T = \frac{10^{24}}{4.56 \times 10^{17}} = 2.19 \times 10^6 \text{ seconds}$$
 
     **换算为天数：**
-    $$T = \frac{2.19 \times 10^6}{3600 \times 24} = \boxed{25.4 \text{ 天}}$$
+    $$T = \frac{2.19 \times 10^6}{3600 \times 24} = \boxed{25.4 \text{ days}}$$
 
     **实际考虑：**
 
@@ -312,7 +312,7 @@ $$L(\Psi, D, q) = \frac{A}{\Psi^\alpha} + \frac{B}{(qD)^\beta} + L_\infty$$
 
     **第 2 部分：过训练倍数**
 
-    $$\text{过训练倍数} = \frac{D_{\text{actual}}}{D^*} = \frac{2 \times 10^{12}}{140 \times 10^9} = \boxed{14.3\times}$$
+    $$\text{Overtraining factor} = \frac{D_{\text{actual}}}{D^*} = \frac{2 \times 10^{12}}{140 \times 10^9} = \boxed{14.3\times}$$
 
     **第 3 部分：损失差异估计**
 

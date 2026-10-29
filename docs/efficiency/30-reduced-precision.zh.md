@@ -1049,7 +1049,7 @@ class MixedPrecisionTrainer:
     2. **误差按 √n 缩放**：与随机误差累积一致
     3. **相对误差保持很小**：典型矩阵规模下 ~0.01-0.1%
 
-    $$\boxed{\text{最大误差 } \propto \sqrt{n}, \text{ BF16 误差} \approx 10 \times \text{FP16 误差}}$$
+    $$\boxed{\text{Max error } \propto \sqrt{n}, \text{ BF16 error} \approx 10 \times \text{FP16 error}}$$
 
 2. **损失缩放**：人为构造一个在 FP16 下会下溢的梯度（例如 $10^{-6}$）。验证不做损失缩放时该梯度变为零。找出能保住该梯度的最小损失缩放值。
 
@@ -1154,7 +1154,7 @@ class MixedPrecisionTrainer:
     | $10^{-7}$ | $6.1 \times 10^{-5}$ | 610 | 1024 |
     | $10^{-8}$ | $6.1 \times 10^{-5}$ | 6100 | 8192 |
 
-    $$\boxed{\text{对 } g = 10^{-6}：\text{最小缩放} = 64}$$
+    $$\boxed{\text{For } g = 10^{-6}: \text{minimum scale} = 64}$$
 
 3. **动态范围**：构造一个在 $[10^{-8}, 10^8]$ 上均匀分布的张量。转换为 FP16 时有多少比例的值丢失？转换为 BF16 时呢？
 
@@ -1248,7 +1248,7 @@ class MixedPrecisionTrainer:
                         all representable
     ```
 
-    $$\boxed{\text{FP16 丢失 } \sim44\% \text{ 的值；BF16 丢失 } \sim0\%}$$
+    $$\boxed{\text{FP16 loses } \sim44\% \text{ of values; BF16 loses } \sim0\%}$$
 
 4. **Softmax 稳定性**：实现不带减最大值技巧的 softmax。找出在 FP16 中导致溢出的最小输入值。验证稳定版本可用。
 
@@ -1381,7 +1381,7 @@ class MixedPrecisionTrainer:
     | $[-15, 15]$ | ✗ 溢出/NaN | ✓ 可用 |
     | $[-100, 100]$ | ✗ 溢出/NaN | ✓ 可用 |
 
-    $$\boxed{\text{FP16 在 } x \geq 11.09 \text{ 时溢出；减最大值可修复}}$$
+    $$\boxed{\text{FP16 overflows at } x \geq 11.09; \text{ max-subtraction fixes it}}$$
 
 5. **混合精度加速**：在你的 GPU 上对 transformer 层做 FP32 与 FP16 的基准测试。加速比是多少？其中多少来自计算、多少来自内存带宽？
 
@@ -1569,7 +1569,7 @@ class MixedPrecisionTrainer:
     | 内存带宽 | 2× | 收益的 ~30% |
     | 缓存效率 | 1.5× | 收益的 ~10% |
 
-    $$\boxed{\text{典型加速：2.5-4×；} \sim60\% \text{ 来自计算，} \sim40\% \text{ 来自内存}}$$
+    $$\boxed{\text{Typical speedup: 2.5-4×; } \sim60\% \text{ from compute, } \sim40\% \text{ from memory}}$$
 
 6. **FP8 量化**：实现到 FP8 E4M3 的逐张量量化。对一个预训练模型，比较其相对 FP16/BF16 的精度退化。
 
@@ -1793,8 +1793,8 @@ class MixedPrecisionTrainer:
     | 缩放策略 | 量化误差 | 存储开销 |
     |----------|----------|----------|
     | 逐张量 | 较高 | 1 个缩放值 |
-    | 逐通道 | 低 2-4× | O(通道数) 个缩放 |
-    | 逐 token（激活） | 最低 | O(批 × 序列) 个缩放 |
+    | 逐通道 | 低 2-4× | O(channels) 个缩放 |
+    | 逐 token（激活） | 最低 | $O(B \cdot S)$ 个缩放 |
 
     **关键观察：**
 
@@ -1803,7 +1803,7 @@ class MixedPrecisionTrainer:
     3. **逐通道缩放**：对 FP8 最小化误差至关重要
     4. **敏感层**：首／末层通常保持更高精度
 
-    $$\boxed{\text{FP8 使准确率退化 } \sim0.5\text{-}1\%；\text{逐通道缩放可将其降低 } 2\text{-}4\times}$$
+    $$\boxed{\text{FP8 degrades accuracy by } \sim0.5\text{-}1\%; \text{ per-channel scaling reduces this by } 2\text{-}4\times}$$
 
 ## 关键要点
 

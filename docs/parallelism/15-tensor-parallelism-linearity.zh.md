@@ -927,7 +927,7 @@ $$\frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y} W^T = \sum_i \fr
 
     **结论：**
 
-    $$\boxed{\text{受通信支配}}$$
+    $$\boxed{\text{Communication-bound}}$$
 
     该层花在通信上的时间约为计算的 3 倍！
 
@@ -1162,7 +1162,7 @@ $$\frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y} W^T = \sum_i \fr
 
     **最佳实践：**
 
-    $$\boxed{\text{设计 TP 度使其整除头数}}$$
+    $$\boxed{\text{Design TP degree to divide head count}}$$
 
     常见配置：
 
@@ -1201,7 +1201,7 @@ $$\frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y} W^T = \sum_i \fr
     - $\frac{\partial L}{\partial Y_i}$ 在 GPU $i$ 本地
     - 结果：$\frac{\partial L}{\partial W_i} \in \mathbb{R}^{d_{in} \times (d_{out}/P)}$
 
-    $$\boxed{\nabla_W L \text{ 不需要通信}}$$
+    $$\boxed{\nabla_W L \text{ requires NO communication}}$$
 
     每块 GPU 独立计算本地梯度。
 
@@ -1233,7 +1233,7 @@ $$\frac{\partial L}{\partial X} = \frac{\partial L}{\partial Y} W^T = \sum_i \fr
 
     $$\frac{\partial L}{\partial X} = \sum_{i=0}^{P-1} \left( \frac{\partial L}{\partial Y_i} W_i^T \right)$$
 
-    $$\boxed{\nabla_X L \text{ 需要 AllReduce}}$$
+    $$\boxed{\nabla_X L \text{ requires AllReduce}}$$
 
     **汇总：**
 

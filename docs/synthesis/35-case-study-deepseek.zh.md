@@ -853,7 +853,7 @@ if __name__ == "__main__":
     $$M_{MLA} = d_c = 512 \text{ bytes（FP16 = 1024 bytes）}$$
 
     **内存缩减：**
-    $$\text{Ratio} = \frac{32768}{1024} = 32\times \text{ 缩减}$$
+    $$\text{Ratio} = \frac{32768}{1024} = 32\times \text{ reduction}$$
 
     **压缩/解压的额外 FLOPs：**
 
@@ -883,7 +883,7 @@ if __name__ == "__main__":
     **计算开销：**
     $$\text{Overhead} = \frac{16.8 + 16.8S}{65.5S} \approx \frac{16.8S}{65.5S} = 25.6\%$$
 
-    $$\boxed{\text{MLA 在 } S > 30K \text{ 时才能被证明合理（此时 MHA 放不进内存）}}$$
+    $$\boxed{\text{MLA justified when } S > 30K \text{ (where MHA cannot fit in memory)}}$$
 
     对 S < 30K，MHA 计算上更便宜；对 S > 30K，MLA 是唯一选择。
 
@@ -938,7 +938,7 @@ if __name__ == "__main__":
     | 256 专家，top-8 | D/32 | 1 + 3.33/√(D/32) | 更低 |
     | 64 专家，top-2 | D/32 | 1 + 2.88/√(D/32) | 更高 |
 
-    $$\boxed{\text{256 专家尽管平均方差相近，峰值不均衡却低 15\%}}$$
+    $$\boxed{\text{256 experts has 15\% lower peak imbalance despite similar average variance}}$$
 
     细粒度专家还能带来更好的路由决策（更多专业化选项）。
 
@@ -988,7 +988,7 @@ $$\max(|w|) \approx \sigma \times \sqrt{2\ln n} = 0.02 \times \sqrt{2\ln 10^7} \
     | 逐张量 | $3.2 \times 10^{-5}$ | $9.2 \times 10^{-6}$ | 0.046% |
     | 逐块（128） | $1.7 \times 10^{-5}$ | $5.0 \times 10^{-6}$ | 0.025% |
 
-    $$\boxed{\text{逐块缩放把量化误差降低 } 1.8\times}$$
+    $$\boxed{\text{Per-block scaling reduces quantization error by } 1.8\times}$$
 
 4. **DualPipe 调度**：为 8 个阶段、16 个微批实现完整的 DualPipe 调度。验证相对标准 1F1B 的气泡缩减。
 
@@ -1110,7 +1110,7 @@ $$\max(|w|) \approx \sigma \times \sqrt{2\ln n} = 0.02 \times \sqrt{2\ln 10^7} \
     | 标准 1F1B | $\frac{7}{23} = 30.4\%$ | 基线 |
     | DualPipe | $\frac{7}{46} = 15.2\%$ | 50% 缩减 |
 
-    $$\boxed{\text{DualPipe 实现 } 50\% \text{ 的气泡缩减（30.4\% → 15.2\%）}}$$
+    $$\boxed{\text{DualPipe achieves } 50\% \text{ bubble reduction (30.4\% → 15.2\%)}}$$
 
 5. **专家通信**：在 2,048 块 GPU、256 个专家下，假设每节点 8 块 GPU，设计一种能最小化跨节点通信的专家放置。
 
@@ -1229,7 +1229,7 @@ $$\max(|w|) \approx \sigma \times \sqrt{2\ln n} = 0.02 \times \sqrt{2\ln 10^7} \
     | 节点本地分组 | 50% | 每半球 128 个专家 |
     | 分层（8 节点） | 12.5% | 8 专家分组复制 |
 
-    $$\boxed{\text{分层放置：8 专家分组跨 8 节点，12.5\% 跨节点通信}}$$
+    $$\boxed{\text{Hierarchical placement: 8-expert groups across 8 nodes, 12.5\% inter-node comm}}$$
 
 6. **成本对比**：用 Chinchilla 缩放律，估算 DeepSeek-V3（37B 激活 × 14.8T token）的质量等效稠密模型。比较训练成本。
 
@@ -1253,7 +1253,7 @@ $$\max(|w|) \approx \sigma \times \sqrt{2\ln n} = 0.02 \times \sqrt{2\ln 10^7} \
 
 $$3.29 \times 10^{24} = 6 \times \Psi \times 20\Psi = 120\Psi^2$$
 
-$$\Psi = \sqrt{\frac{3.29 \times 10^{24}}{120}} = 165B \text{ 参数}$$
+$$\Psi = \sqrt{\frac{3.29 \times 10^{24}}{120}} = 165B \text{ parameters}$$
 
     **但等等——MoE 每 token 用的 FLOPs 更少！**
 
@@ -1278,7 +1278,7 @@ $$\Psi = \sqrt{\frac{3.29 \times 10^{24}}{120}} = 165B \text{ 参数}$$
     | 稠密 300B | $5.4 \times 10^{24}$ | 3.0M | 600 万美元 |
     | DeepSeek-V3 | $3.29 \times 10^{24}$ | 1.8M | 360 万美元 |
 
-    $$\boxed{\text{DeepSeek-V3 比等效稠密模型便宜 } 1.6\times}$$
+    $$\boxed{\text{DeepSeek-V3 is } 1.6\times \text{ cheaper than equivalent dense model}}$$
 
     **MoE 的其他优势：**
     - 更低的推理成本（激活 37B 对 300B）

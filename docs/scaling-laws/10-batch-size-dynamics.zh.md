@@ -462,7 +462,7 @@ $$\text{noise scale} = \frac{||\text{Var}(\nabla L)||}{||\mathbb{E}[\nabla L]||^
     | “浪费”的算力 | 48% |
 
     **完美缩放会给出：**
-    $$S_{\text{perfect}} = \frac{50,000}{16} = 3,125 \text{ 步}$$
+    $$S_{\text{perfect}} = \frac{50,000}{16} = 3,125 \text{ steps}$$
 
     实际：6,000 步 → 比完美缩放多 1.92× 的步数。
 
@@ -560,7 +560,7 @@ $$\text{noise scale} = \frac{||\text{Var}(\nabla L)||}{||\mathbb{E}[\nabla L]||^
 
     **恒定批大小（每步 1M token）：**
 
-    $$\text{Updates}_{\text{constant}} = \frac{D}{1\text{M}} = D \text{ 次更新（以百万计）}$$
+    $$\text{Updates}_{\text{constant}} = \frac{D}{1\text{M}} = D \text{ updates (in millions)}$$
 
     **动态批大小：**
 

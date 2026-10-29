@@ -126,7 +126,7 @@ $$\text{algbw} = \frac{n}{T_{\text{collective}}}$$
 
 对 NCCL 而言，**总线带宽**（bus bandwidth，busbw）考虑了一个事实：数据必须流经多条链路：
 
-$$\text{busbw} = \text{algbw} \times \text{校正因子}$$
+$$\text{busbw} = \text{algbw} \times \text{correction factor}$$
 
 校正因子取决于具体的集合通信操作：
 
@@ -650,7 +650,7 @@ $$T \approx P \cdot \alpha \gg \frac{n}{\beta}$$
     | 数据并行 | 114 ms | 4.6% |
     | **总计** | **2,498 ms** | 100% |
 
-    $$\boxed{\text{张量并行以 } 21\times \text{ 主导}}$$
+    $$\boxed{\text{Tensor Parallelism dominates by } 21\times}$$
 
     **分析：**
 
@@ -722,7 +722,7 @@ $$T \approx P \cdot \alpha \gg \frac{n}{\beta}$$
     | 8×8（A） | 11.67 ms | 17.57 ms | 11.67 ms | **40.91 ms** |
     | 16×4（B） | 10 ms | 37.65 ms | 10 ms | 57.65 ms |
 
-    $$\boxed{\text{8×8 比 16×4 快 1.41 倍}}$$
+    $$\boxed{\text{8×8 is 1.41× faster than 16×4}}$$
 
     **为什么 8×8 胜出：**
 

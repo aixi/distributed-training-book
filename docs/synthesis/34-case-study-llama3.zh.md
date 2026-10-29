@@ -727,7 +727,7 @@ if __name__ == "__main__":
 
     **权衡分析：**
 
-    $$\boxed{\text{PP=16 在内存（25.3B/GPU）与可接受的气泡（19\%）之间取得平衡}}$$
+    $$\boxed{\text{PP=16 balances memory (25.3B/GPU) with acceptable bubble (19\%)}}$$
 
     PP=32 省内存，但把 1/3 的计算浪费在气泡上。
 
@@ -774,7 +774,7 @@ if __name__ == "__main__":
 
     在这个尺寸下，NVLink 的优势占主导。只有当下式成立时 TP=16 才取胜：
 
-    $$\boxed{M > 2 \text{ GB（对单次 AllReduce 而言很少实用）}}$$
+    $$\boxed{M > 2 \text{ GB (rarely practical for single AllReduce)}}$$
 
     **结论：** 由于 NVLink 有 18 倍的带宽优势，TP=8（节点本地）几乎总是优于 TP=16。
 
@@ -792,7 +792,7 @@ if __name__ == "__main__":
 
     要完全隐藏通信，计算至少要耗时相同：
 
-    $$T_{compute} \geq T_{comm} = 4 \text{ 秒}$$
+    $$T_{compute} \geq T_{comm} = 4 \text{ seconds}$$
 
     **LLaMA 3 405B 每次前向的计算：**
 
@@ -804,7 +804,7 @@ if __name__ == "__main__":
 
     在 H100 上 50% MFU（有效 990 TFLOP/s）：
 
-    $$T_{compute} = \frac{8.1 \times 10^{17}}{990 \times 10^{12}} = 818 \text{ 秒（每 GPU）}$$
+    $$T_{compute} = \frac{8.1 \times 10^{17}}{990 \times 10^{12}} = 818 \text{ seconds (per GPU)}$$
 
     等等——这是完整模型。FSDP 下每个 DP 分片，计算是分布式进行的。
 
@@ -814,7 +814,7 @@ if __name__ == "__main__":
 
     每层 AllGather：$\frac{200/126}{50} \approx 32$ ms
 
-    $$\boxed{\text{所需重叠比例} = \frac{32 \text{ ms}}{6.5 \text{ s}} \approx 0.5\%}$$
+    $$\boxed{\text{Overlap fraction needed} = \frac{32 \text{ ms}}{6.5 \text{ s}} \approx 0.5\%}$$
 
     每层的计算远超通信，所以极少的重叠就足够。
 
@@ -861,7 +861,7 @@ if __name__ == "__main__":
     | 标准（无 CP） | 合计 1,058 GB | 0 |
     | CP=8 | 132 GB/GPU | 147 ms/层 |
 
-    $$\boxed{\text{CP=8 以每层 147 ms 的通信换取 8× 的内存缩减}}$$
+    $$\boxed{\text{CP=8 trades 147 ms/layer communication for 8× memory reduction}}$$
 
     没有 CP，128K 上下文不可能；有了 CP，完整前向额外约 18.5s 通信即可行。
 
@@ -878,14 +878,14 @@ if __name__ == "__main__":
 
     每日训练时间：24 小时 = 1440 分钟
 
-    $$\text{时间损失} = \frac{50}{1440} = 3.5\%$$
+    $$\text{Time lost} = \frac{50}{1440} = 3.5\%$$
 
     **场景 B：30 秒内存中恢复**
 
     - 恢复时间：30 秒
     - 每日恢复开销：$10 \times 30 = 300$ 秒 = 5 分钟
 
-    $$\text{时间损失} = \frac{5}{1440} = 0.35\%$$
+    $$\text{Time lost} = \frac{5}{1440} = 0.35\%$$
 
     **整个训练（2T token 约 85 天）：**
 
@@ -894,7 +894,7 @@ if __name__ == "__main__":
     | 5 分钟检查点 | 3.5% | 3.0 天 | 82 天 |
     | 30 秒内存中 | 0.35% | 0.3 天 | 84.7 天 |
 
-    $$\boxed{\text{内存中恢复节省 } 2.7 \text{ 天（3.2\% 改善）}}$$
+    $$\boxed{\text{In-memory recovery saves } 2.7 \text{ days (3.2\% improvement)}}$$
 
     **其他考量：**
     - 检查点之间的工作丢失（通常间隔 10–30 分钟）
@@ -948,7 +948,7 @@ if __name__ == "__main__":
     | 中期 | 8M | 5M | 69% | 44% |
     | 后期 | 16M | 10M | 69% | 29% |
 
-    $$\boxed{\text{动态批处理维持 69–75\% 的效率，固定批只有 29\%}}$$
+    $$\boxed{\text{Dynamic batching maintains 69-75\% efficiency vs 29\% with fixed batch}}$$
 
     动态批大小带来的 2–3 倍效率增益，节省了数周的训练时间。
 

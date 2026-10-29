@@ -59,7 +59,7 @@ $$M_{\text{static}} = 2\Psi + 2\Psi + 12\Psi = 16\Psi$$
 
 $$M_{\text{act}}^{\text{layer}} \approx BSH \cdot (34 + 5\frac{AS}{H})$$
 
-其中 $B$ = 批，$S$ = 序列，$H$ = 隐层，$A$ = 头数。这个系数是基于常见激活张量计数的粗略经验值。
+其中 $B$ = 批大小，$S$ = 序列长度，$H$ = 隐藏维度，$A$ = 头数。这个系数是基于常见激活张量计数的粗略经验值。
 
 总激活内存：
 
@@ -108,7 +108,7 @@ $$T_{\text{step}} = \frac{F_{\text{step}}}{\text{MFU} \times \text{Peak FLOP/s} 
 
 其中：
 
-- $F_{\text{step}} = 6\Psi \cdot B \cdot S$（批 × 序列 token 数）
+- $F_{\text{step}} = 6\Psi \cdot B \cdot S$（$B \cdot S$ 个 token）
 - 对优化良好的训练，MFU ≈ 0.40–0.50
 - P = GPU 数量
 
@@ -175,7 +175,7 @@ p=8、m=32 时：Bubble = 7/39 ≈ 18%
 | 错误 | 后果 | 修正 |
 |------|------|------|
 | 忘记优化器状态 | 内存低估 3 倍 | 始终计入 12Ψ |
-| 忽略激活值 | 训练中 OOM | 计入批 × 序列 × 隐层 |
+| 忽略激活值 | 训练中 OOM | 计入 $B \cdot S \cdot H$ |
 | 假设 100% MFU | 时间低估 2 倍 | 用 40–50% MFU |
 | 忽略通信 | 理论可行、实践失败 | 加上 AllReduce/AllGather 时间 |
 

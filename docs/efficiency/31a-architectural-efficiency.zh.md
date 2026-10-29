@@ -28,7 +28,7 @@ $$\text{KV cache per token} = 2 \times A \times d_h \times s \text{ bytes}$$
 
 $$\text{KV cache per token} = 2 \times 64 \times 128 \times 2 = 32{,}768 \text{ bytes} \approx 32 \text{ KB}$$
 
-128K 上下文时：$32 \text{ KB} \times 128{,}000 = 4.1 \text{ GB 每层}$。80 层则是**328 GB**——超过单块 GPU。
+128K 上下文时：$32 \text{ KB} \times 128{,}000 = 4.1 \text{ GB per layer}$。80 层则是**328 GB**——超过单块 GPU。
 
 ### GQA：共享 KV 头
 

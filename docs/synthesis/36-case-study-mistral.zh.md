@@ -1093,7 +1093,7 @@ $$\text{Speed ratio} \approx \frac{\text{Active params}}{\text{Mistral params}} 
     | GQA-8 | 25% | 99%+ | ✓ 最佳权衡 |
     | GQA-4 | 12.5% | 98–99% | 良好权衡 |
 
-    $$\boxed{\text{GQA 8 组：4× 内存缩减，质量损失 <1\%}}$$
+    $$\boxed{\text{GQA with 8 groups: 4× memory reduction with <1\% quality loss}}$$
 
 3. **MoE 计算效率**：对一个 16 专家、top-2 路由的模型，有多大比例的专家 FLOPs 被激活？按 Chinchilla 扩展律，这如何改变最优训练数据预算？
 
@@ -1145,7 +1145,7 @@ $$\text{Speed ratio} \approx \frac{\text{Active params}}{\text{Mistral params}} 
     1. 推理成本低（激活 12.9B）
     2. 更多 token 持续提升质量
 
-    $$\boxed{\text{12.5\% 激活 → 相同 FLOP 预算下可训练 8× 更多 token}}$$
+    $$\boxed{\text{12.5\% activation → can train on 8× more tokens at same FLOP budget}}$$
 
 4. **专家并行**：你有 64 块 GPU，想训练 Mixtral 8x22B（8 专家）。设计一个考虑 TP、EP、DP 维度的并行策略。有哪些权衡？
 
@@ -1201,7 +1201,7 @@ $$\text{Speed ratio} \approx \frac{\text{Active params}}{\text{Mistral params}} 
 
     有 DP=2 时，每个副本处理一半批 → A2A 通信量更低。
 
-    $$\boxed{\text{策略 1（TP=4, EP=8, DP=2）平衡了内存与吞吐}}$$
+    $$\boxed{\text{Strategy 1 (TP=4, EP=8, DP=2) balances memory and throughput}}$$
 
 5. **负载均衡**：实现一个带与不带辅助损失的 token 路由模拟。测量 1000 步后专家负载不均衡度（max/min 比）。
 
@@ -1313,7 +1313,7 @@ $$\text{Speed ratio} \approx \frac{\text{Active params}}{\text{Mistral params}} 
     | 无辅助损失 | 3–10× | 30–50% 浪费 |
     | 有辅助损失 | 1.1–1.5× | <5% 浪费 |
 
-    $$\boxed{\text{辅助损失把不均衡从 5× 降到 1.3×}}$$
+    $$\boxed{\text{Auxiliary loss reduces imbalance from 5× to 1.3×}}$$
 
 6. **投机解码加速**：若草稿模型比目标模型快 5 倍，平均接受 70% 的提议 token，投机深度 K=4，预期加速比是多少？
 

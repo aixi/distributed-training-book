@@ -102,7 +102,7 @@ $$T(n) = \alpha + \frac{n}{\beta}$$
 
 ### 张量并行
 
-需要**每一层**都对激活张量做集合通信（常见 TP 方案中的 AllGather/ReduceScatter）。通信量与批 × 序列 × 隐层维成正比。
+需要**每一层**都对激活张量做集合通信（常见 TP 方案中的 AllGather/ReduceScatter）。通信量与 $B \cdot S \cdot H$ 成正比。
 
 - 节点内（NVLink）：约 900 GB/s → 可行
 - 跨节点（InfiniBand）：约 50 GB/s → 往往是瓶颈
@@ -113,7 +113,7 @@ $$T(n) = \alpha + \frac{n}{\beta}$$
 
 只在阶段边界通信激活值。是点对点而非集合通信，能容忍更高的延迟。
 
-- 激活大小：批 × 序列 × 隐层维（通常几十 MB）
+- 激活大小：$B \cdot S \cdot H$（通常几十 MB）
 - 对 InfiniBand 而言已接近交叉点：延迟影响较小
 - 总体带宽需求更低
 
@@ -121,7 +121,7 @@ $$T(n) = \alpha + \frac{n}{\beta}$$
 
 ### 数据并行
 
-每步通信一次梯度。通信量是 O(参数)，而非 O(激活 × 层数)。
+每步通信一次梯度。通信量是 O(parameters)，而非 O(activations × layers)。
 
 - 可用梯度累积提高通信强度
 - 压缩技术能降低带宽需求
